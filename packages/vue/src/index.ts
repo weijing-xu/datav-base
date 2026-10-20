@@ -18,6 +18,7 @@ import DvDigitalFlop from "./components/DvDigitalFlop.vue";
 import DvGauge from "./components/DvGauge.vue";
 import DvGeoMap from "./components/DvGeoMap.vue";
 import DvGlitchText from "./components/DvGlitchText.vue";
+import DvGlobe from "./components/DvGlobe.vue";
 import DvFlipClock from "./components/DvFlipClock.vue";
 import DvMarqueeText from "./components/DvMarqueeText.vue";
 import DvPercentRing from "./components/DvPercentRing.vue";
@@ -57,6 +58,7 @@ export {
   DvGauge,
   DvGeoMap,
   DvGlitchText,
+  DvGlobe,
   DvLoading,
   DvMarqueeText,
   DvPercentRing,
@@ -92,6 +94,7 @@ const components = {
   DvGauge,
   DvGeoMap,
   DvGlitchText,
+  DvGlobe,
   DvLoading,
   DvMarqueeText,
   DvPercentRing,

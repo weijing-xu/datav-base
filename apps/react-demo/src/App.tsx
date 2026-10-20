@@ -19,6 +19,7 @@ import {
   DvFullScreenContainer,
   DvGauge,
   DvGlitchText,
+  DvGlobe,
   DvLoading,
   DvMarqueeText,
   DvPercentRing,
@@ -77,6 +78,29 @@ const FLY_LINES = [
   { from: 3, to: 5 },
   { from: 0, to: 2 },
   { from: 5, to: 4 },
+];
+
+// Globe markers (lat/lng) — hub cities; lines are index pairs into this list.
+const GLOBE_CITIES: { lat: number; lng: number }[] = [
+  { lat: 39.9, lng: 116.41 }, // 北京
+  { lat: 31.23, lng: 121.47 }, // 上海
+  { lat: 40.7, lng: -74.0 }, // 纽约
+  { lat: 51.5, lng: -0.1 }, // 伦敦
+  { lat: 35.7, lng: 139.7 }, // 东京
+  { lat: 1.35, lng: 103.8 }, // 新加坡
+  { lat: 50.1, lng: 8.7 }, // 法兰克福
+  { lat: -33.9, lng: 151.2 }, // 悉尼
+  { lat: 25.2, lng: 55.3 }, // 迪拜
+];
+const globeMarkers = GLOBE_CITIES;
+const globeLines: [number, number][] = [
+  [0, 2],
+  [0, 4],
+  [1, 5],
+  [2, 3],
+  [3, 6],
+  [5, 7],
+  [0, 8],
 ];
 
 /** Demo GeoJSON — abstract regions in 0-100 coordinates. */
@@ -340,6 +364,10 @@ export function App() {
                 <DvScrollRanking rows={rankingRows} rowHeight={30} speed={18} unit=" 单" />
               </DvBorderBox>
             </div>
+            <DvBorderBox variant="box4" style={{ height: 300 }}>
+              <h3 style={panelTitle}>全球链路</h3>
+              <DvGlobe markers={globeMarkers} lines={globeLines} />
+            </DvBorderBox>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>

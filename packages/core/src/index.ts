@@ -48,6 +48,8 @@ export { createFlowChevron } from "./effects/flowChevron";
 export type { FlowChevronOptions } from "./effects/flowChevron";
 export { createCornerScan } from "./effects/cornerScan";
 export type { CornerScanOptions } from "./effects/cornerScan";
+export { createGlobe } from "./effects/globe";
+export type { GlobeHandle, GlobeLine, GlobeMarker, GlobeOptions } from "./effects/globe";
 export { createTilt } from "./interactions/tilt";
 export type { TiltOptions } from "./interactions/tilt";
 

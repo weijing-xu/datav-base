@@ -20,6 +20,7 @@ import {
   DvFullScreenContainer,
   DvGauge,
   DvGlitchText,
+  DvGlobe,
   DvLoading,
   DvMarqueeText,
   DvPercentRing,
@@ -137,6 +138,27 @@ const rankingRows = Array.from({ length: 8 }, (_, i) => ({
 }));
 
 const borderVariants = ["box7", "box8", "box9", "box10", "box11", "box12", "box13"] as const;
+
+const globeMarkers = [
+  { lat: 39.9, lng: 116.41 }, // 北京
+  { lat: 31.23, lng: 121.47 }, // 上海
+  { lat: 40.7, lng: -74.0 }, // 纽约
+  { lat: 51.5, lng: -0.1 }, // 伦敦
+  { lat: 35.7, lng: 139.7 }, // 东京
+  { lat: 1.35, lng: 103.8 }, // 新加坡
+  { lat: 50.1, lng: 8.7 }, // 法兰克福
+  { lat: -33.9, lng: 151.2 }, // 悉尼
+  { lat: 25.2, lng: 55.3 }, // 迪拜
+];
+const globeLines: [number, number][] = [
+  [0, 2],
+  [0, 4],
+  [1, 5],
+  [2, 3],
+  [3, 6],
+  [5, 7],
+  [0, 8],
+];
 
 const capsuleRows = Array.from({ length: 5 }, (_, i) => ({
   name: `通道-${String(i + 1).padStart(2, "0")}`,
@@ -301,6 +323,10 @@ const barOption = {
               <DvScrollRanking :rows="rankingRows" :row-height="30" :speed="18" unit=" 单" />
             </DvBorderBox>
           </div>
+          <DvBorderBox variant="box4" style="height: 300px">
+            <h3 class="panel-title">全球链路</h3>
+            <DvGlobe :markers="globeMarkers" :lines="globeLines" />
+          </DvBorderBox>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 24px">

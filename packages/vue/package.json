@@ -21,10 +21,14 @@
   },
   "peerDependencies": {
     "echarts": "^6.0.0",
+    "three": "^0.180.0",
     "vue": "^3.5.0"
   },
   "peerDependenciesMeta": {
     "echarts": {
+      "optional": true
+    },
+    "three": {
       "optional": true
     }
   },
@@ -32,8 +36,10 @@
     "@dv/core": "workspace:*"
   },
   "devDependencies": {
+    "@types/three": "^0.186.0",
     "@vitejs/plugin-vue": "^6.0.0",
     "echarts": "^6.0.0",
+    "three": "^0.186.1",
     "typescript": "~5.9.3",
     "vite": "^8.0.0",
     "vue": "^3.5.0",

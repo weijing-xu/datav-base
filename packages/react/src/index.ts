@@ -64,3 +64,5 @@ export { DvTrendValue } from "./components/DvTrendValue";
 export type { DvTrendValueProps } from "./components/DvTrendValue";
 export { DvGlitchText } from "./components/DvGlitchText";
 export type { DvGlitchTextProps } from "./components/DvGlitchText";
+export { DvGlobe } from "./components/DvGlobe";
+export type { DvGlobeProps } from "./components/DvGlobe";

@@ -13,6 +13,7 @@
     "@dv/core": "workspace:*",
     "@dv/vue": "workspace:*",
     "echarts": "^6.0.0",
+    "three": "^0.186.1",
     "vue": "^3.5.0"
   },
   "devDependencies": {
