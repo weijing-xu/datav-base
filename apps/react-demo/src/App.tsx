@@ -34,21 +34,6 @@ import {
 import { dvFunnelOption, dvRadarOption, dvSankeyOption, geoBounds } from "@dv/core";
 import { useEffect, useMemo, useState } from "react";
 
-const card: React.CSSProperties = {
-  background: "rgba(9,32,63,0.6)",
-  border: "1px solid rgba(0,246,255,0.45)",
-  padding: "24px 40px",
-  display: "flex",
-  flexDirection: "column",
-  gap: 8,
-};
-
-const panelTitle: React.CSSProperties = {
-  fontSize: 18,
-  color: "#5b87a8",
-  margin: "8px 0 4px",
-  padding: "0 12px",
-};
 
 // Normalized fallback used while china.json is still loading.
 const NORM_POINTS = [
@@ -281,103 +266,81 @@ export function App() {
 
   return (
     <DvFullScreenContainer designHeight={1500}>
-      <div style={{ position: "relative", width: "100%", height: "100%", color: "#d5f1ff" }}>
-        <div style={{ position: "absolute", inset: 0, opacity: 0.35, pointerEvents: "none" }}>
+      <div className="screen">
+        <div className="screen-bg">
           <DvPlexus points={70} speed={14} />
         </div>
-        <header
-          style={{
-            height: 100,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            position: "relative",
-          }}
-        >
-          <div style={{ position: "absolute", inset: 0 }}>
-            <DvDecoration1 points={60} speed={1.4} />
+
+        <header className="screen-header">
+          <div className="screen-side">
+            <DvDecoration3 period={5} />
           </div>
-          <div style={{ position: "relative", textAlign: "center" }}>
-            <h1 style={{ margin: 0, fontSize: 40, letterSpacing: 12 }}>数据大屏基座 · React</h1>
-            <div style={{ height: 12, width: 480, margin: "6px auto 0" }}>
+          <div style={{ textAlign: "center" }}>
+            <h1 className="screen-title">数据大屏基座</h1>
+            <div style={{ height: 10, width: 420, margin: "8px auto 4px" }}>
               <DvDecoration2 period={4} />
             </div>
             <DvTypewriter
-              text="React19 + Vue3 双端同引擎 · effects in @dv/core"
+              text="React 19 + Vue 3 双端同引擎 · effects in @dv/core"
               speed={18}
               loop
-              style={{ fontSize: 14, color: "#5b87a8" }}
+              style={{ fontSize: 13, color: "#54799b", letterSpacing: 2 }}
             />
+          </div>
+          <div className="screen-side" style={{ textAlign: "right" }}>
+            <DvFlipClock to={deadline} />
           </div>
         </header>
 
-        <main
-          style={{
-            display: "grid",
-            gridTemplateColumns: "520px 760px 520px",
-            gap: 24,
-            padding: "0 40px",
-            marginTop: 30,
-          }}
-        >
-          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-            <div style={{ display: "flex", gap: 24 }}>
+        <main className="screen-main">
+          <div className="col">
+            <div className="stat-row">
               <DvTiltCard style={{ flex: 1 }}>
-                <div style={{ ...card, padding: "16px 20px", height: "100%" }}>
-                  <span style={{ color: "#5b87a8", fontSize: 16 }}>累计访问量</span>
-                  <DvDigitalFlop value={pv} style={{ fontSize: 40 }} />
-                  <DvTrendValue value={pv} delta={4.6} style={{ fontSize: 14 }} />
+                <div className="stat-card">
+                  <span className="stat-label">累计访问量</span>
+                  <DvDigitalFlop value={pv} style={{ fontSize: 36 }} />
+                  <DvTrendValue value={pv} delta={4.6} style={{ fontSize: 13 }} />
                 </div>
               </DvTiltCard>
               <DvTiltCard style={{ flex: 1 }}>
-                <div style={{ ...card, padding: "16px 20px", height: "100%" }}>
-                  <span style={{ color: "#5b87a8", fontSize: 16 }}>在线人数</span>
-                  <DvDigitalFlop value={uv} style={{ fontSize: 40, color: "#48ffe0" }} />
-                  <DvTrendValue value={uv} delta={-1.8} style={{ fontSize: 14 }} />
+                <div className="stat-card">
+                  <span className="stat-label">在线人数</span>
+                  <DvDigitalFlop value={uv} style={{ fontSize: 36, color: "#48ffe0" }} />
+                  <DvTrendValue value={uv} delta={-1.8} style={{ fontSize: 13 }} />
                 </div>
               </DvTiltCard>
             </div>
-            <div style={{ ...card, padding: "12px 20px" }}>
-              <span style={{ color: "#5b87a8", fontSize: 16 }}>系统时间 · 倒计时</span>
-              <DvFlipClock to={deadline} />
+            <div className="alert-wrap">
+              <DvAlert level="warn">
+                <DvGlitchText text="3 个节点负载超过阈值，请关注华东区扩容" />
+              </DvAlert>
             </div>
-            <DvAlert level="warn">
-              <DvGlitchText text="3 个节点负载超过阈值，请关注华东区扩容" />
-            </DvAlert>
-            <DvBorderBox variant="box4" style={{ height: 320 }}>
-              <h3 style={panelTitle}>节点监控</h3>
-              <DvScrollBoard
-                header={["节点", "负载", "状态", "更新时间"]}
-                rows={boardRows}
-                rowHeight={34}
-                speed={20}
-              />
-            </DvBorderBox>
-            <DvBorderBox variant="box2" style={{ height: 190 }}>
-              <h3 style={panelTitle}>锥形分布</h3>
-              <DvConicalChart rows={capsuleRows} unit="%" style={{ height: "calc(100% - 46px)" }} />
-            </DvBorderBox>
+            <section className="panel" style={{ height: 360 }}>
+              <h3 className="panel-title">节点监控</h3>
+              <div className="panel-body">
+                <DvScrollBoard
+                  header={["节点", "负载", "状态", "更新时间"]}
+                  rows={boardRows}
+                  rowHeight={34}
+                  speed={20}
+                />
+              </div>
+            </section>
+            <section className="panel" style={{ height: 210 }}>
+              <h3 className="panel-title">锥形分布</h3>
+              <div className="panel-body">
+                <DvConicalChart rows={capsuleRows} unit="%" />
+              </div>
+            </section>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-            <DvBorderBox variant="box3" style={{ height: 420 }}>
-              <h3 style={panelTitle}>数据迁徙{drill ? ` · ${drill.name}` : " · 点击省份下钻"}</h3>
+          <div className="col">
+            <DvBorderBox variant="box3" style={{ height: 460 }}>
+              <h3 className="panel-title">
+                数据迁徙{drill ? ` · ${drill.name}` : " · 点击省份下钻"}
+              </h3>
               {drill && (
-                <button
-                  onClick={() => setDrill(undefined)}
-                  style={{
-                    position: "absolute",
-                    top: 44,
-                    right: 14,
-                    zIndex: 3,
-                    background: "rgba(0,246,255,0.12)",
-                    border: "1px solid rgba(0,246,255,0.5)",
-                    color: "#00f6ff",
-                    fontSize: 12,
-                    padding: "3px 10px",
-                    cursor: "pointer",
-                  }}
-                >
+                <button className="drill-back" onClick={() => setDrill(undefined)}>
                   ← 返回全国
                 </button>
               )}
@@ -392,101 +355,99 @@ export function App() {
                 onGeoPick={drillIn}
               />
             </DvBorderBox>
-            <div style={{ display: "flex", gap: 24, height: 200 }}>
-              <DvBorderBox variant="box2" style={{ flex: 1 }}>
-                <h3 style={panelTitle}>实时水位</h3>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around", height: "calc(100% - 50px)" }}>
+            <div className="row" style={{ height: 200 }}>
+              <section className="panel" style={{ flex: 1 }}>
+                <h3 className="panel-title">实时水位</h3>
+                <div
+                  className="panel-body"
+                  style={{ display: "flex", alignItems: "center", justifyContent: "space-around" }}
+                >
                   <DvWaterLevelPond value={water} size={90} />
                   <DvPercentRing value={water} size={90} />
                   <DvGauge value={water} size={100} />
                   <DvLoading text="同步中" size={60} />
                 </div>
-              </DvBorderBox>
-              <DvBorderBox variant="box6" style={{ flex: 1 }}>
-                <h3 style={panelTitle}>区域排名</h3>
-                <DvScrollRanking rows={rankingRows} rowHeight={30} speed={18} unit=" 单" />
-              </DvBorderBox>
+              </section>
+              <section className="panel" style={{ flex: 1 }}>
+                <h3 className="panel-title">区域排名</h3>
+                <div className="panel-body">
+                  <DvScrollRanking rows={rankingRows} rowHeight={30} speed={18} unit=" 单" />
+                </div>
+              </section>
             </div>
-            <DvBorderBox variant="box4" style={{ height: 300 }}>
-              <h3 style={panelTitle}>全球链路</h3>
-              <DvGlobe markers={globeMarkers} lines={globeLines} />
-            </DvBorderBox>
+            <section className="panel" style={{ height: 290 }}>
+              <h3 className="panel-title">全球链路</h3>
+              <div className="panel-body">
+                <DvGlobe markers={globeMarkers} lines={globeLines} />
+              </div>
+            </section>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-            <DvBorderBox variant="box5" style={{ height: 340 }}>
-              <h3 style={panelTitle}>周吞吐趋势</h3>
-              <DvChart option={barOption} />
-            </DvBorderBox>
-            <DvBorderBox variant="box1" style={{ height: 190 }}>
-              <h3 style={panelTitle}>通道负载</h3>
-              <DvCapsuleChart rows={capsuleRows} unit="%" />
-            </DvBorderBox>
-            <div style={{ display: "flex", gap: 16, height: 150 }}>
-              <div style={{ position: "relative", flex: 1 }}>
-                <DvDecoration3 period={5} />
+          <div className="col">
+            <section className="panel" style={{ height: 380 }}>
+              <h3 className="panel-title">周吞吐趋势</h3>
+              <div className="panel-body">
+                <DvChart option={barOption} />
               </div>
-              <div style={{ position: "relative", flex: 1 }}>
-                <DvDecoration5 />
+            </section>
+            <section className="panel" style={{ height: 200 }}>
+              <h3 className="panel-title">通道负载</h3>
+              <div className="panel-body">
+                <DvCapsuleChart rows={capsuleRows} unit="%" />
               </div>
-              <div style={{ position: "relative", flex: 1 }}>
-                <DvDecoration6 />
-              </div>
-              <div style={{ position: "relative", flex: 1 }}>
-                <DvDecoration7 />
-              </div>
-              <div style={{ position: "relative", flex: 1 }}>
-                <DvDecoration8 />
-              </div>
-              <div style={{ position: "relative", flex: 1 }}>
-                <DvDecoration9 />
-              </div>
-              <div style={{ position: "relative", flex: 1 }}>
-                <DvDecoration10 />
-              </div>
+            </section>
+            <div className="deco-strip" style={{ padding: 0 }}>
+              {[
+                { name: "雷达扫描", node: <DvDecoration3 period={5} /> },
+                { name: "轨道光点", node: <DvDecoration5 /> },
+                { name: "脉冲环", node: <DvDecoration6 /> },
+                { name: "流动斜纹", node: <DvDecoration7 /> },
+                { name: "刻度盘", node: <DvDecoration8 /> },
+                { name: "箭头流", node: <DvDecoration9 /> },
+                { name: "取景框", node: <DvDecoration10 /> },
+              ].map((d) => (
+                <div key={d.name} className="deco-cell">
+                  {d.node}
+                  <span className="deco-name">{d.name}</span>
+                </div>
+              ))}
             </div>
           </div>
         </main>
 
-        <section style={{ display: "flex", gap: 24, margin: "24px 40px 0", height: 240 }}>
-          <DvBorderBox variant="box8" style={{ flex: 1 }}>
-            <h3 style={panelTitle}>链路质量</h3>
-            <DvChart option={radarOption} />
-          </DvBorderBox>
-          <DvBorderBox variant="box9" style={{ flex: 1 }}>
-            <h3 style={panelTitle}>接入漏斗</h3>
-            <DvChart option={funnelOption} />
-          </DvBorderBox>
-          <DvBorderBox variant="box12" style={{ flex: 1 }}>
-            <h3 style={panelTitle}>数据流向</h3>
-            <DvChart option={sankeyOption} />
-          </DvBorderBox>
+        <section className="chart-strip">
+          <section className="panel">
+            <h3 className="panel-title">链路质量</h3>
+            <div className="panel-body">
+              <DvChart option={radarOption} />
+            </div>
+          </section>
+          <section className="panel">
+            <h3 className="panel-title">接入漏斗</h3>
+            <div className="panel-body">
+              <DvChart option={funnelOption} />
+            </div>
+          </section>
+          <section className="panel">
+            <h3 className="panel-title">数据流向</h3>
+            <div className="panel-body">
+              <DvChart option={sankeyOption} />
+            </div>
+          </section>
         </section>
 
-        <section style={{ display: "flex", gap: 16, margin: "24px 40px 0", height: 110 }}>
+        <section className="variant-strip">
           {(["box7", "box8", "box9", "box10", "box11", "box12", "box13"] as const).map((v) => (
-            <DvBorderBox key={v} variant={v} style={{ flex: 1 }}>
-              <div
-                style={{
-                  height: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "#5b87a8",
-                  fontSize: 14,
-                }}
-              >
-                {v}
-              </div>
+            <DvBorderBox key={v} variant={v} className="variant-cell">
+              <div className="variant-label">{v}</div>
             </DvBorderBox>
           ))}
         </section>
 
-        <footer style={{ marginTop: 24, padding: "0 40px" }}>
+        <footer className="screen-footer">
           <DvMarqueeText items={feed} speed={70} />
         </footer>
       </div>
     </DvFullScreenContainer>
   );
 }
-

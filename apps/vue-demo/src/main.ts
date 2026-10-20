@@ -1,3 +1,4 @@
+import "./screen.css";
 import "@dv/core/styles";
 import { createApp } from "vue";
 import App from "./App.vue";

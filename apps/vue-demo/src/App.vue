@@ -146,6 +146,16 @@ const rankingRows = Array.from({ length: 8 }, (_, i) => ({
 
 const borderVariants = ["box7", "box8", "box9", "box10", "box11", "box12", "box13"] as const;
 
+const decos = [
+  { name: "雷达扫描", node: DvDecoration3 },
+  { name: "轨道光点", node: DvDecoration5 },
+  { name: "脉冲环", node: DvDecoration6 },
+  { name: "流动斜纹", node: DvDecoration7 },
+  { name: "刻度盘", node: DvDecoration8 },
+  { name: "箭头流", node: DvDecoration9 },
+  { name: "取景框", node: DvDecoration10 },
+];
+
 const globeMarkers = [
   { lat: 39.9, lng: 116.41 }, // 北京
   { lat: 31.23, lng: 121.47 }, // 上海
@@ -246,88 +256,78 @@ const sankeyOption = dvSankeyOption({
 
 <template>
   <DvFullScreenContainer :design-height="1500">
-    <div style="position: relative; width: 100%; height: 100%; color: #d5f1ff">
-      <div style="position: absolute; inset: 0; opacity: 0.35; pointer-events: none">
+    <div class="screen">
+      <div class="screen-bg">
         <DvPlexus :points="70" :speed="14" />
       </div>
-      <header
-        style="height: 100px; display: flex; align-items: center; justify-content: center; position: relative"
-      >
-        <div style="position: absolute; inset: 0">
-          <DvDecoration1 :points="60" :speed="1.4" />
+
+      <header class="screen-header">
+        <div class="screen-side">
+          <DvDecoration3 :period="5" />
         </div>
-        <div style="position: relative; text-align: center">
-          <h1 style="margin: 0; font-size: 40px; letter-spacing: 12px">数据大屏基座 · Vue</h1>
-          <div style="height: 12px; width: 480px; margin: 6px auto 0">
+        <div style="text-align: center">
+          <h1 class="screen-title">数据大屏基座</h1>
+          <div style="height: 10px; width: 420px; margin: 8px auto 4px">
             <DvDecoration2 :period="4" />
           </div>
           <DvTypewriter
-            text="React19 + Vue3 双端同引擎 · effects in @dv/core"
+            text="React 19 + Vue 3 双端同引擎 · effects in @dv/core"
             :speed="18"
             loop
-            style="font-size: 14px; color: #5b87a8"
+            style="font-size: 13px; color: #54799b; letter-spacing: 2px"
           />
+        </div>
+        <div class="screen-side" style="text-align: right">
+          <DvFlipClock :to="deadline" />
         </div>
       </header>
 
-      <main
-        style="
-          display: grid;
-          grid-template-columns: 520px 760px 520px;
-          gap: 24px;
-          padding: 0 40px;
-          margin-top: 30px;
-        "
-      >
-        <div style="display: flex; flex-direction: column; gap: 24px">
-          <div style="display: flex; gap: 24px">
+      <main class="screen-main">
+        <div class="col">
+          <div class="stat-row">
             <DvTiltCard style="flex: 1">
-              <div class="card" style="height: 100%">
-                <span class="label">累计访问量</span>
-                <DvDigitalFlop :value="pv" style="font-size: 40px" />
-                <DvTrendValue :value="pv" :delta="4.6" style="font-size: 14px" />
+              <div class="stat-card">
+                <span class="stat-label">累计访问量</span>
+                <DvDigitalFlop :value="pv" style="font-size: 36px" />
+                <DvTrendValue :value="pv" :delta="4.6" style="font-size: 13px" />
               </div>
             </DvTiltCard>
             <DvTiltCard style="flex: 1">
-              <div class="card" style="height: 100%">
-                <span class="label">在线人数</span>
-                <DvDigitalFlop :value="uv" style="font-size: 40px; color: #48ffe0" />
-                <DvTrendValue :value="uv" :delta="-1.8" style="font-size: 14px" />
+              <div class="stat-card">
+                <span class="stat-label">在线人数</span>
+                <DvDigitalFlop :value="uv" style="font-size: 36px; color: #48ffe0" />
+                <DvTrendValue :value="uv" :delta="-1.8" style="font-size: 13px" />
               </div>
             </DvTiltCard>
           </div>
-          <div class="card" style="padding: 12px 20px">
-            <span class="label">系统时间 · 倒计时</span>
-            <DvFlipClock :to="deadline" />
+          <div class="alert-wrap">
+            <DvAlert level="warn">
+              <DvGlitchText text="3 个节点负载超过阈值，请关注华东区扩容" />
+            </DvAlert>
           </div>
-          <DvAlert level="warn">
-            <DvGlitchText text="3 个节点负载超过阈值，请关注华东区扩容" />
-          </DvAlert>
-          <DvBorderBox variant="box4" style="height: 320px">
+          <section class="panel" style="height: 360px">
             <h3 class="panel-title">节点监控</h3>
-            <DvScrollBoard
-              :header="['节点', '负载', '状态', '更新时间']"
-              :rows="boardRows"
-              :row-height="34"
-              :speed="20"
-            />
-          </DvBorderBox>
-          <DvBorderBox variant="box2" style="height: 190px">
+            <div class="panel-body">
+              <DvScrollBoard
+                :header="['节点', '负载', '状态', '更新时间']"
+                :rows="boardRows"
+                :row-height="34"
+                :speed="20"
+              />
+            </div>
+          </section>
+          <section class="panel" style="height: 210px">
             <h3 class="panel-title">锥形分布</h3>
-            <DvConicalChart :rows="capsuleRows" unit="%" style="height: calc(100% - 46px)" />
-          </DvBorderBox>
+            <div class="panel-body">
+              <DvConicalChart :rows="capsuleRows" unit="%" />
+            </div>
+          </section>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 24px">
-          <DvBorderBox variant="box3" style="height: 420px">
+        <div class="col">
+          <DvBorderBox variant="box3" style="height: 460px">
             <h3 class="panel-title">数据迁徙{{ drill ? ` · ${drill.name}` : " · 点击省份下钻" }}</h3>
-            <button
-              v-if="drill"
-              class="drill-back"
-              @click="drill = undefined"
-            >
-              ← 返回全国
-            </button>
+            <button v-if="drill" class="drill-back" @click="drill = undefined">← 返回全国</button>
             <DvFlylineMap
               :points="mapData.points"
               :lines="mapData.lines"
@@ -339,134 +339,81 @@ const sankeyOption = dvSankeyOption({
               @geo-pick="drillIn"
             />
           </DvBorderBox>
-          <div style="display: flex; gap: 24px; height: 200px">
-            <DvBorderBox variant="box2" style="flex: 1">
+          <div class="row" style="height: 200px">
+            <section class="panel" style="flex: 1">
               <h3 class="panel-title">实时水位</h3>
               <div
-                style="
-                  display: flex;
-                  align-items: center;
-                  justify-content: space-around;
-                  height: calc(100% - 50px);
-                "
+                class="panel-body"
+                style="display: flex; align-items: center; justify-content: space-around"
               >
                 <DvWaterLevelPond :value="water" :size="90" />
                 <DvPercentRing :value="water" :size="90" />
                 <DvGauge :value="water" :size="100" />
                 <DvLoading text="同步中" :size="60" />
               </div>
-            </DvBorderBox>
-            <DvBorderBox variant="box6" style="flex: 1">
+            </section>
+            <section class="panel" style="flex: 1">
               <h3 class="panel-title">区域排名</h3>
-              <DvScrollRanking :rows="rankingRows" :row-height="30" :speed="18" unit=" 单" />
-            </DvBorderBox>
+              <div class="panel-body">
+                <DvScrollRanking :rows="rankingRows" :row-height="30" :speed="18" unit=" 单" />
+              </div>
+            </section>
           </div>
-          <DvBorderBox variant="box4" style="height: 300px">
+          <section class="panel" style="height: 290px">
             <h3 class="panel-title">全球链路</h3>
-            <DvGlobe :markers="globeMarkers" :lines="globeLines" />
-          </DvBorderBox>
+            <div class="panel-body">
+              <DvGlobe :markers="globeMarkers" :lines="globeLines" />
+            </div>
+          </section>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 24px">
-          <DvBorderBox variant="box5" style="height: 340px">
+        <div class="col">
+          <section class="panel" style="height: 380px">
             <h3 class="panel-title">周吞吐趋势</h3>
-            <DvChart :option="barOption" />
-          </DvBorderBox>
-          <DvBorderBox variant="box1" style="height: 190px">
+            <div class="panel-body">
+              <DvChart :option="barOption" />
+            </div>
+          </section>
+          <section class="panel" style="height: 200px">
             <h3 class="panel-title">通道负载</h3>
-            <DvCapsuleChart :rows="capsuleRows" unit="%" />
-          </DvBorderBox>
-          <div style="display: flex; gap: 16px; height: 150px">
-            <div style="position: relative; flex: 1">
-              <DvDecoration3 :period="5" />
+            <div class="panel-body">
+              <DvCapsuleChart :rows="capsuleRows" unit="%" />
             </div>
-            <div style="position: relative; flex: 1">
-              <DvDecoration5 />
-            </div>
-            <div style="position: relative; flex: 1">
-              <DvDecoration6 />
-            </div>
-            <div style="position: relative; flex: 1">
-              <DvDecoration7 />
-            </div>
-            <div style="position: relative; flex: 1">
-              <DvDecoration8 />
-            </div>
-            <div style="position: relative; flex: 1">
-              <DvDecoration9 />
-            </div>
-            <div style="position: relative; flex: 1">
-              <DvDecoration10 />
+          </section>
+          <div class="deco-strip" style="padding: 0">
+            <div v-for="d in decos" :key="d.name" class="deco-cell">
+              <component :is="d.node" />
+              <span class="deco-name">{{ d.name }}</span>
             </div>
           </div>
         </div>
       </main>
 
-      <section style="display: flex; gap: 24px; margin: 24px 40px 0; height: 240px">
-        <DvBorderBox variant="box8" style="flex: 1">
+      <section class="chart-strip">
+        <section class="panel">
           <h3 class="panel-title">链路质量</h3>
-          <DvChart :option="radarOption" />
-        </DvBorderBox>
-        <DvBorderBox variant="box9" style="flex: 1">
+          <div class="panel-body"><DvChart :option="radarOption" /></div>
+        </section>
+        <section class="panel">
           <h3 class="panel-title">接入漏斗</h3>
-          <DvChart :option="funnelOption" />
-        </DvBorderBox>
-        <DvBorderBox variant="box12" style="flex: 1">
+          <div class="panel-body"><DvChart :option="funnelOption" /></div>
+        </section>
+        <section class="panel">
           <h3 class="panel-title">数据流向</h3>
-          <DvChart :option="sankeyOption" />
+          <div class="panel-body"><DvChart :option="sankeyOption" /></div>
+        </section>
+      </section>
+
+      <section class="variant-strip">
+        <DvBorderBox v-for="v in borderVariants" :key="v" :variant="v" class="variant-cell">
+          <div class="variant-label">{{ v }}</div>
         </DvBorderBox>
       </section>
 
-      <section style="display: flex; gap: 16px; margin: 24px 40px 0; height: 110px">
-        <DvBorderBox v-for="v in borderVariants" :key="v" :variant="v" style="flex: 1">
-          <div class="border-label">{{ v }}</div>
-        </DvBorderBox>
-      </section>
-
-      <footer style="margin-top: 24px; padding: 0 40px">
+      <footer class="screen-footer">
         <DvMarqueeText :items="feed" :speed="70" />
       </footer>
     </div>
   </DvFullScreenContainer>
 </template>
 
-<style scoped>
-.card {
-  background: rgba(9, 32, 63, 0.6);
-  border: 1px solid rgba(0, 246, 255, 0.45);
-  padding: 16px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.label {
-  color: #5b87a8;
-  font-size: 16px;
-}
-.panel-title {
-  font-size: 18px;
-  color: #5b87a8;
-  margin: 8px 0 4px;
-  padding: 0 12px;
-}
-.border-label {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #5b87a8;
-  font-size: 14px;
-}
-.drill-back {
-  position: absolute;
-  top: 44px;
-  right: 14px;
-  z-index: 3;
-  background: rgba(0, 246, 255, 0.12);
-  border: 1px solid rgba(0, 246, 255, 0.5);
-  color: #00f6ff;
-  font-size: 12px;
-  padding: 3px 10px;
-  cursor: pointer;
-}
-</style>

@@ -1,0 +1,270 @@
+/* Demo screen design system — shared look for both demo apps. */
+
+.screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  color: #dbeaf8;
+  font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  background:
+    radial-gradient(1200px 600px at 50% -10%, rgba(43, 108, 176, 0.22), transparent 60%),
+    radial-gradient(900px 500px at 85% 110%, rgba(0, 180, 190, 0.1), transparent 60%),
+    linear-gradient(180deg, #060d1c 0%, #081222 55%, #060d1c 100%);
+}
+
+.screen-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+/* ── header ─────────────────────────────────────────── */
+.screen-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 88px;
+  padding: 0 48px;
+}
+
+.screen-header::after {
+  content: "";
+  position: absolute;
+  left: 48px;
+  right: 48px;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(94, 180, 255, 0.35), transparent);
+}
+
+.screen-title {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 600;
+  letter-spacing: 10px;
+  background: linear-gradient(180deg, #eaf6ff 30%, #7fd4ff 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 32px rgba(64, 170, 255, 0.25);
+}
+
+.screen-sub {
+  margin-top: 6px;
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: #54799b;
+}
+
+.screen-clock {
+  min-width: 240px;
+  text-align: right;
+  font-size: 13px;
+  color: #54799b;
+  letter-spacing: 2px;
+}
+
+.screen-side {
+  width: 320px;
+}
+
+/* ── layout ─────────────────────────────────────────── */
+.screen-main {
+  display: grid;
+  grid-template-columns: 480px 1fr 480px;
+  gap: 20px;
+  padding: 20px 48px 0;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.row {
+  display: flex;
+  gap: 20px;
+}
+
+/* ── glass panel ────────────────────────────────────── */
+.panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  border: 1px solid rgba(94, 180, 255, 0.14);
+  background: linear-gradient(160deg, rgba(19, 44, 76, 0.55), rgba(9, 22, 42, 0.55));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 10px 30px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
+  overflow: hidden;
+}
+
+.panel-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 14px 18px 10px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: #a8cbe4;
+}
+
+.panel-title::before {
+  content: "";
+  width: 3px;
+  height: 14px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #38e1ff, #2f81f7);
+  box-shadow: 0 0 8px rgba(56, 225, 255, 0.6);
+}
+
+.panel-body {
+  flex: 1;
+  min-height: 0;
+  padding: 0 12px 12px;
+}
+
+/* ── stat cards ─────────────────────────────────────── */
+.stat-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px 24px;
+  border-radius: 10px;
+  border: 1px solid rgba(94, 180, 255, 0.14);
+  background: linear-gradient(160deg, rgba(19, 44, 76, 0.55), rgba(9, 22, 42, 0.55));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.stat-card .stat-label {
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: #54799b;
+}
+
+.stat-card .stat-value {
+  font-family: var(--dv-font-number);
+  font-size: 34px;
+  color: #35e0ff;
+  text-shadow: 0 0 18px rgba(53, 224, 255, 0.35);
+}
+
+/* ── misc ───────────────────────────────────────────── */
+.alert-wrap {
+  margin-top: 16px;
+}
+
+.deco-strip {
+  display: flex;
+  gap: 20px;
+  height: 130px;
+  padding: 0 48px;
+  margin-top: 20px;
+}
+
+.deco-cell {
+  position: relative;
+  flex: 1;
+  border-radius: 10px;
+  border: 1px solid rgba(94, 180, 255, 0.12);
+  background: rgba(12, 26, 48, 0.4);
+  overflow: hidden;
+}
+
+.deco-cell .deco-name {
+  position: absolute;
+  left: 10px;
+  bottom: 6px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #46647f;
+  z-index: 2;
+}
+
+.variant-strip {
+  display: flex;
+  gap: 16px;
+  height: 100px;
+  padding: 0 48px;
+  margin-top: 20px;
+}
+
+.variant-cell {
+  flex: 1;
+}
+
+.variant-label {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #54799b;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.chart-strip {
+  display: flex;
+  gap: 20px;
+  height: 230px;
+  padding: 0 48px;
+  margin-top: 20px;
+}
+
+.chart-strip .panel {
+  flex: 1;
+}
+
+.screen-footer {
+  margin-top: 20px;
+  padding: 0 48px 24px;
+  opacity: 0.8;
+}
+
+.drill-back {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  z-index: 3;
+  background: rgba(56, 225, 255, 0.1);
+  border: 1px solid rgba(56, 225, 255, 0.4);
+  border-radius: 4px;
+  color: #35e0ff;
+  font-size: 12px;
+  letter-spacing: 1px;
+  padding: 4px 12px;
+  cursor: pointer;
+}
+
+.drill-back:hover {
+  background: rgba(56, 225, 255, 0.2);
+}
+
+.stat-row {
+  display: flex;
+  gap: 20px;
+}
+
+.card {
+  background: linear-gradient(160deg, rgba(19, 44, 76, 0.55), rgba(9, 22, 42, 0.55));
+  border: 1px solid rgba(94, 180, 255, 0.14);
+  border-radius: 10px;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.label {
+  color: #54799b;
+  font-size: 13px;
+  letter-spacing: 2px;
+}
