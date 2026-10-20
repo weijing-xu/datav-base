@@ -20,8 +20,14 @@
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
+    "echarts": "^6.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "echarts": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@dv/core": "workspace:*"
@@ -31,6 +37,7 @@
     "@types/react-dom": "^19.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "echarts": "^6.0.0",
     "tsdown": "^0.18.0",
     "typescript": "~5.9.3"
   }

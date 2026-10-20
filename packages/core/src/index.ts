@@ -10,6 +10,21 @@ export { createPulseField } from "./effects/pulseField";
 export type { PulseFieldOptions } from "./effects/pulseField";
 export { createScrollLoop } from "./effects/scrollLoop";
 export type { ScrollLoopOptions } from "./effects/scrollLoop";
+export { createFlylines } from "./effects/flylines";
+export type { FlyLine, FlylinesOptions, FlyPoint } from "./effects/flylines";
+export { createWaveFill } from "./effects/waveFill";
+export type { WaveFillHandle, WaveFillOptions } from "./effects/waveFill";
+export { createRadarSweep } from "./effects/radarSweep";
+export type { RadarSweepOptions } from "./effects/radarSweep";
+export { createHexGrid } from "./effects/hexGrid";
+export type { HexGridOptions } from "./effects/hexGrid";
+export { createScanline } from "./effects/scanline";
+export type { ScanlineOptions } from "./effects/scanline";
+export { createLoadingRing } from "./effects/loadingRing";
+export type { LoadingRingOptions } from "./effects/loadingRing";
+
+export { createChartHost } from "./charts/chartHost";
+export type { ChartHost, ChartHostOptions, EChartInstanceLike, EChartsLike } from "./charts/chartHost";
 
 export { borderBoxPolys } from "./components/borders";
 export type { BorderBoxColors, BorderBoxVariant, BorderPolygon } from "./components/borders";

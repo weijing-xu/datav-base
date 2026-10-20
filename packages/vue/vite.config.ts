@@ -10,7 +10,7 @@ export default defineConfig({
       fileName: () => "index.js",
     },
     rollupOptions: {
-      external: ["vue", "@dv/core"],
+      external: ["vue", "@dv/core", "echarts"],
     },
     sourcemap: true,
   },

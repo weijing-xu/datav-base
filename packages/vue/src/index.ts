@@ -1,18 +1,53 @@
 import type { App } from "vue";
+import DvAlert from "./components/DvAlert.vue";
 import DvBorderBox from "./components/DvBorderBox.vue";
+import DvChart from "./components/DvChart.vue";
 import DvDecoration1 from "./components/DvDecoration1.vue";
+import DvDecoration2 from "./components/DvDecoration2.vue";
+import DvDecoration3 from "./components/DvDecoration3.vue";
+import DvDecoration4 from "./components/DvDecoration4.vue";
 import DvDigitalFlop from "./components/DvDigitalFlop.vue";
+import DvFlylineMap from "./components/DvFlylineMap.vue";
 import DvFullScreenContainer from "./components/DvFullScreenContainer.vue";
+import DvLoading from "./components/DvLoading.vue";
 import DvScrollBoard from "./components/DvScrollBoard.vue";
+import DvScrollRanking from "./components/DvScrollRanking.vue";
+import DvWaterLevelPond from "./components/DvWaterLevelPond.vue";
 
-export { DvBorderBox, DvDecoration1, DvDigitalFlop, DvFullScreenContainer, DvScrollBoard };
+export { useCanvasEffect } from "./composables/useCanvasEffect";
+
+export {
+  DvAlert,
+  DvBorderBox,
+  DvChart,
+  DvDecoration1,
+  DvDecoration2,
+  DvDecoration3,
+  DvDecoration4,
+  DvDigitalFlop,
+  DvFlylineMap,
+  DvFullScreenContainer,
+  DvLoading,
+  DvScrollBoard,
+  DvScrollRanking,
+  DvWaterLevelPond,
+};
 
 const components = {
+  DvAlert,
   DvBorderBox,
+  DvChart,
   DvDecoration1,
+  DvDecoration2,
+  DvDecoration3,
+  DvDecoration4,
   DvDigitalFlop,
+  DvFlylineMap,
   DvFullScreenContainer,
+  DvLoading,
   DvScrollBoard,
+  DvScrollRanking,
+  DvWaterLevelPond,
 };
 
 /** `app.use(DvVue)` registers every component globally. */

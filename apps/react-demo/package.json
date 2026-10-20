@@ -12,6 +12,7 @@
   "dependencies": {
     "@dv/core": "workspace:*",
     "@dv/react": "workspace:*",
+    "echarts": "^6.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

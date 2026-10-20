@@ -20,13 +20,20 @@
     "typecheck": "vue-tsc --noEmit -p tsconfig.json"
   },
   "peerDependencies": {
+    "echarts": "^6.0.0",
     "vue": "^3.5.0"
+  },
+  "peerDependenciesMeta": {
+    "echarts": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@dv/core": "workspace:*"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.0",
+    "echarts": "^6.0.0",
     "typescript": "~5.9.3",
     "vite": "^8.0.0",
     "vue": "^3.5.0",
