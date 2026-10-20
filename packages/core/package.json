@@ -27,5 +27,19 @@
   "devDependencies": {
     "tsdown": "^0.18.0",
     "typescript": "~5.9.3"
-  }
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/weijing-xu/datav-base.git",
+    "directory": "packages/core"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "datav",
+    "data-screen",
+    "canvas-effects"
+  ]
 }
