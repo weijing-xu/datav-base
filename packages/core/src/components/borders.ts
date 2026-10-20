@@ -15,7 +15,9 @@ export interface BorderPolygon {
   dash?: string;
 }
 
-export type BorderBoxVariant = "box1" | "box2" | "box3" | "box4" | "box5" | "box6";
+export type BorderBoxVariant =
+  | "box1" | "box2" | "box3" | "box4" | "box5" | "box6"
+  | "box7" | "box8" | "box9" | "box10" | "box11" | "box12" | "box13";
 
 export interface BorderBoxColors {
   /** Primary line color. */
@@ -155,6 +157,111 @@ function box6(w: number, h: number, { primary, accent }: BorderBoxColors): Borde
   ];
 }
 
+/** box7: double-stroke full frame (thick outer + thin inner) + small corner dots. */
+function box7(w: number, h: number, { primary, accent }: BorderBoxColors): BorderPolygon[] {
+  const o = 6;
+  const d = 3;
+  return [
+    {
+      points: pts([0, 0], [w, 0], [w, h], [0, h], [0, 0]),
+      stroke: primary,
+      strokeWidth: 3,
+      opacity: 0.7,
+    },
+    {
+      points: pts([o, o], [w - o, o], [w - o, h - o], [o, h - o], [o, o]),
+      stroke: primary,
+      strokeWidth: 1,
+      opacity: 0.5,
+    },
+    { points: pts([o + d, o], [o - d, o], [o - d, o - d], [o + d, o - d], [o + d, o]), fill: accent },
+    { points: pts([w - o - d, o], [w - o + d, o], [w - o + d, o - d], [w - o - d, o - d], [w - o - d, o]), fill: accent },
+    { points: pts([w - o - d, h - o], [w - o + d, h - o], [w - o + d, h - o + d], [w - o - d, h - o + d], [w - o - d, h - o]), fill: accent },
+    { points: pts([o + d, h - o], [o - d, h - o], [o - d, h - o + d], [o + d, h - o + d], [o + d, h - o]), fill: accent },
+  ];
+}
+
+/** box8: heavy top-left / bottom-right corner slabs + thin frame. */
+function box8(w: number, h: number, { primary, accent }: BorderBoxColors): BorderPolygon[] {
+  const a = Math.min(30, w * 0.1, h * 0.2);
+  return [
+    { points: pts([0, 0], [w, 0], [w, h], [0, h], [0, 0]), stroke: primary, strokeWidth: 1, opacity: 0.4 },
+    { points: pts([0, a], [0, 0], [a, 0]), stroke: accent, strokeWidth: 5 },
+    { points: pts([w - a, h], [w, h], [w, h - a]), stroke: accent, strokeWidth: 5 },
+    { points: pts([w, a], [w, 0], [w - a, 0]), stroke: primary, strokeWidth: 2, opacity: 0.8 },
+    { points: pts([a, h], [0, h], [0, h - a]), stroke: primary, strokeWidth: 2, opacity: 0.8 },
+  ];
+}
+
+/** box9: beveled long edges — top/bottom trapezoid slabs + open sides. */
+function box9(w: number, h: number, { primary, accent }: BorderBoxColors): BorderPolygon[] {
+  const b = Math.min(36, w * 0.08);
+  return [
+    { points: pts([b, 0], [w - b, 0], [w - b - 6, 5], [b + 6, 5], [b, 0]), fill: primary, opacity: 0.25, stroke: primary, strokeWidth: 1 },
+    { points: pts([b, h], [w - b, h], [w - b - 6, h - 5], [b + 6, h - 5], [b, h]), fill: primary, opacity: 0.25, stroke: primary, strokeWidth: 1 },
+    { points: pts([0, 0], [b - 4, 0]), stroke: accent, strokeWidth: 2 },
+    { points: pts([w - b + 4, 0], [w, 0]), stroke: accent, strokeWidth: 2 },
+    { points: pts([0, h], [b - 4, h]), stroke: accent, strokeWidth: 2 },
+    { points: pts([w - b + 4, h], [w, h]), stroke: accent, strokeWidth: 2 },
+  ];
+}
+
+/** box10: thin frame + L corner brackets + two tag squares centered on the top edge. */
+function box10(w: number, h: number, { primary, accent }: BorderBoxColors): BorderPolygon[] {
+  const a = Math.min(22, w * 0.06, h * 0.15);
+  const s = 4;
+  const cx = w / 2;
+  return [
+    { points: pts([0, 0], [w, 0], [w, h], [0, h], [0, 0]), stroke: primary, strokeWidth: 1, opacity: 0.35 },
+    { points: pts([0, a], [0, 0], [a, 0]), stroke: primary, strokeWidth: 2 },
+    { points: pts([w - a, 0], [w, 0], [w, a]), stroke: primary, strokeWidth: 2 },
+    { points: pts([w, h - a], [w, h], [w - a, h]), stroke: primary, strokeWidth: 2 },
+    { points: pts([a, h], [0, h], [0, h - a]), stroke: primary, strokeWidth: 2 },
+    { points: pts([cx - s - 8, -s], [cx - 8, -s], [cx - 8, s], [cx - s - 8, s], [cx - s - 8, -s]), fill: accent },
+    { points: pts([cx + 8, -s], [cx + s + 8, -s], [cx + s + 8, s], [cx + 8, s], [cx + 8, -s]), fill: accent },
+  ];
+}
+
+/** box11: single thin frame + wide title slot cut into the top edge. */
+function box11(w: number, h: number, { primary, accent }: BorderBoxColors): BorderPolygon[] {
+  const slot = Math.min(140, w * 0.4);
+  const d = 8;
+  const cx = w / 2;
+  return [
+    { points: pts([0, 0], [cx - slot / 2, 0]), stroke: primary, strokeWidth: 1.5 },
+    { points: pts([cx + slot / 2, 0], [w, 0], [w, h], [0, h], [0, 0]), stroke: primary, strokeWidth: 1.5 },
+    { points: pts([cx - slot / 2, 0], [cx - slot / 2 + d, d], [cx + slot / 2 - d, d], [cx + slot / 2, 0]), stroke: accent, strokeWidth: 1.5 },
+  ];
+}
+
+/** box12: thin frame + triangle corner accents + center-top tab. */
+function box12(w: number, h: number, { primary, accent }: BorderBoxColors): BorderPolygon[] {
+  const a = 8;
+  const tab = 26;
+  const cx = w / 2;
+  return [
+    { points: pts([0, 0], [w, 0], [w, h], [0, h], [0, 0]), stroke: primary, strokeWidth: 1, opacity: 0.4 },
+    { points: pts([0, 0], [a, 0], [0, a], [0, 0]), fill: accent },
+    { points: pts([w, 0], [w - a, 0], [w, a], [w, 0]), fill: accent },
+    { points: pts([w, h], [w - a, h], [w, h - a], [w, h]), fill: accent },
+    { points: pts([0, h], [a, h], [0, h - a], [0, h]), fill: accent },
+    { points: pts([cx - tab / 2, 0], [cx + tab / 2, 0], [cx + tab / 2 - 5, 6], [cx - tab / 2 + 5, 6], [cx - tab / 2, 0]), fill: primary, opacity: 0.6 },
+  ];
+}
+
+/** box13: dashed frame + solid inner frame + side-center notches. */
+function box13(w: number, h: number, { primary, accent }: BorderBoxColors): BorderPolygon[] {
+  const o = 5;
+  const n = Math.min(30, h * 0.12);
+  const cy = h / 2;
+  return [
+    { points: pts([0, 0], [w, 0], [w, h], [0, h], [0, 0]), stroke: primary, strokeWidth: 1, dash: "8 5" },
+    { points: pts([o, o], [w - o, o], [w - o, h - o], [o, h - o], [o, o]), stroke: primary, strokeWidth: 1, opacity: 0.45 },
+    { points: pts([0, cy - n / 2], [5, cy], [0, cy + n / 2]), stroke: accent, strokeWidth: 2 },
+    { points: pts([w, cy - n / 2], [w - 5, cy], [w, cy + n / 2]), stroke: accent, strokeWidth: 2 },
+  ];
+}
+
 const builders: Record<BorderBoxVariant, (w: number, h: number, colors: BorderBoxColors) => BorderPolygon[]> = {
   box1,
   box2,
@@ -162,6 +269,13 @@ const builders: Record<BorderBoxVariant, (w: number, h: number, colors: BorderBo
   box4,
   box5,
   box6,
+  box7,
+  box8,
+  box9,
+  box10,
+  box11,
+  box12,
+  box13,
 };
 
 /**

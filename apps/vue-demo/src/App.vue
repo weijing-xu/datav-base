@@ -136,6 +136,8 @@ const rankingRows = Array.from({ length: 8 }, (_, i) => ({
   value: Math.round(500 + Math.random() * 9500),
 }));
 
+const borderVariants = ["box7", "box8", "box9", "box10", "box11", "box12", "box13"] as const;
+
 const capsuleRows = Array.from({ length: 5 }, (_, i) => ({
   name: `通道-${String(i + 1).padStart(2, "0")}`,
   value: Math.round(20 + Math.random() * 80),
@@ -336,6 +338,12 @@ const barOption = {
         </div>
       </main>
 
+      <section style="display: flex; gap: 16px; margin: 24px 40px 0; height: 110px">
+        <DvBorderBox v-for="v in borderVariants" :key="v" :variant="v" style="flex: 1">
+          <div class="border-label">{{ v }}</div>
+        </DvBorderBox>
+      </section>
+
       <footer style="margin-top: 24px; padding: 0 40px">
         <DvMarqueeText :items="feed" :speed="70" />
       </footer>
@@ -361,6 +369,14 @@ const barOption = {
   color: #5b87a8;
   margin: 8px 0 4px;
   padding: 0 12px;
+}
+.border-label {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #5b87a8;
+  font-size: 14px;
 }
 .drill-back {
   position: absolute;

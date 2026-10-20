@@ -377,6 +377,25 @@ export function App() {
           </div>
         </main>
 
+        <section style={{ display: "flex", gap: 16, margin: "24px 40px 0", height: 110 }}>
+          {(["box7", "box8", "box9", "box10", "box11", "box12", "box13"] as const).map((v) => (
+            <DvBorderBox key={v} variant={v} style={{ flex: 1 }}>
+              <div
+                style={{
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#5b87a8",
+                  fontSize: 14,
+                }}
+              >
+                {v}
+              </div>
+            </DvBorderBox>
+          ))}
+        </section>
+
         <footer style={{ marginTop: 24, padding: "0 40px" }}>
           <DvMarqueeText items={feed} speed={70} />
         </footer>
