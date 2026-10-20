@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { createGeoMap, type GeoJSONCollection } from "@dv/core";
+import { createGeoMap, type GeoJSONCollection, type GeoJSONFeature } from "@dv/core";
 import { watch } from "vue";
 import { useCanvasEffect } from "../composables/useCanvasEffect";
 
@@ -13,29 +13,25 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const emit = defineEmits<{ pick: [feature: GeoJSONFeature] }>();
 
-const { canvas, handle } = useCanvasEffect((el) =>
-  createGeoMap(el, {
-    geoJson: props.geoJson,
-    highlight: props.highlight,
-    fill: props.fill,
-    stroke: props.stroke,
-    showLabels: props.showLabels,
-  }),
-);
+const options = () => ({
+  geoJson: props.geoJson,
+  highlight: props.highlight,
+  fill: props.fill,
+  stroke: props.stroke,
+  showLabels: props.showLabels,
+  onPick: (f: GeoJSONFeature) => emit("pick", f),
+});
+
+const { canvas, handle } = useCanvasEffect((el) => createGeoMap(el, options()));
 
 watch(
   () => [props.geoJson, props.highlight],
   () => {
     handle.value?.destroy();
     if (canvas.value) {
-      handle.value = createGeoMap(canvas.value, {
-        geoJson: props.geoJson,
-        highlight: props.highlight,
-        fill: props.fill,
-        stroke: props.stroke,
-        showLabels: props.showLabels,
-      });
+      handle.value = createGeoMap(canvas.value, options());
     }
   },
   { deep: true },

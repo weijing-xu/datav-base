@@ -30,6 +30,7 @@ import {
   DvTypewriter,
   DvWaterLevelPond,
 } from "@dv/react";
+import { geoBounds } from "@dv/core";
 import { useEffect, useMemo, useState } from "react";
 
 const card: React.CSSProperties = {
@@ -47,6 +48,16 @@ const panelTitle: React.CSSProperties = {
   margin: "8px 0 4px",
   padding: "0 12px",
 };
+
+// Normalized fallback used while china.json is still loading.
+const NORM_POINTS = [
+  { x: 0.78, y: 0.3, name: "北京" },
+  { x: 0.72, y: 0.55, name: "武汉" },
+  { x: 0.82, y: 0.65, name: "上海" },
+  { x: 0.45, y: 0.45, name: "兰州" },
+  { x: 0.6, y: 0.75, name: "广州" },
+  { x: 0.35, y: 0.62, name: "成都" },
+];
 
 // Real lng/lat over the China GeoJSON base map.
 const CITY_POINTS = [
@@ -86,6 +97,7 @@ export function App() {
   const [uv, setUv] = useState(86321);
   const [water, setWater] = useState(62);
   const [china, setChina] = useState<import("@dv/core").GeoJSONCollection>();
+  const [drill, setDrill] = useState<{ name: string; data: import("@dv/core").GeoJSONCollection }>();
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}china.json`)
@@ -93,6 +105,28 @@ export function App() {
       .then((j: import("@dv/core").GeoJSONCollection) => setChina(j))
       .catch(() => {});
   }, []);
+
+  /** Province click → fetch province GeoJSON from the DataV boundary CDN and drill in. */
+  const drillIn = (f: import("@dv/core").GeoJSONFeature) => {
+    const adcode = f.properties?.adcode;
+    if (typeof adcode !== "number") return;
+    fetch(`https://geo.datav.aliyun.com/areas_v3/bound/${adcode}_full.json`)
+      .then((r) => r.json())
+      .then((j: import("@dv/core").GeoJSONCollection) => setDrill({ name: f.properties?.name ?? "", data: j }))
+      .catch(() => {});
+  };
+
+  const activeGeo = drill?.data ?? china;
+  const { mapPoints, mapLines } = useMemo(() => {
+    if (!activeGeo) return { mapPoints: NORM_POINTS, mapLines: FLY_LINES };
+    const b = geoBounds(activeGeo);
+    const pts = CITY_POINTS.filter((p) => p.x >= b.minX && p.x <= b.maxX && p.y >= b.minY && p.y <= b.maxY);
+    const lines = FLY_LINES.map((l) => ({
+      from: pts.indexOf(CITY_POINTS[l.from]!),
+      to: pts.indexOf(CITY_POINTS[l.to]!),
+    })).filter((l) => l.from >= 0 && l.to >= 0);
+    return { mapPoints: pts, mapLines: lines };
+  }, [activeGeo]);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -260,15 +294,35 @@ export function App() {
 
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             <DvBorderBox variant="box3" style={{ height: 420 }}>
-              <h3 style={panelTitle}>数据迁徙</h3>
+              <h3 style={panelTitle}>数据迁徙{drill ? ` · ${drill.name}` : " · 点击省份下钻"}</h3>
+              {drill && (
+                <button
+                  onClick={() => setDrill(undefined)}
+                  style={{
+                    position: "absolute",
+                    top: 44,
+                    right: 14,
+                    zIndex: 3,
+                    background: "rgba(0,246,255,0.12)",
+                    border: "1px solid rgba(0,246,255,0.5)",
+                    color: "#00f6ff",
+                    fontSize: 12,
+                    padding: "3px 10px",
+                    cursor: "pointer",
+                  }}
+                >
+                  ← 返回全国
+                </button>
+              )}
               <DvFlylineMap
-                points={CITY_POINTS}
-                lines={FLY_LINES}
+                points={mapPoints}
+                lines={mapLines}
                 labels
                 speed={0.3}
-                geoJson={china ?? REGIONS}
+                geoJson={activeGeo ?? REGIONS}
                 geoHighlight={china ? ["广东省", "上海市", "北京市"] : ["华东", "华南"]}
-                coord={china ? "geo" : "normalized"}
+                coord={activeGeo ? "geo" : "normalized"}
+                onGeoPick={drillIn}
               />
             </DvBorderBox>
             <div style={{ display: "flex", gap: 24, height: 200 }}>

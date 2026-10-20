@@ -5,6 +5,7 @@ import {
   type FlyLine,
   type FlyPoint,
   type GeoJSONCollection,
+  type GeoJSONFeature,
 } from "@dv/core";
 import type { CSSProperties, ReactNode } from "react";
 import { useCanvasEffect } from "../hooks/useCanvasEffect";
@@ -29,6 +30,8 @@ export interface DvFlylineMapProps {
    * with the `geoJson` base map — requires geoJson.
    */
   coord?: "normalized" | "geo";
+  /** Click hit-test on geoJson features (e.g. drill-down by adcode). */
+  onGeoPick?: (feature: GeoJSONFeature) => void;
   className?: string;
   style?: CSSProperties;
   /** Background layer rendered under the lines (map image, grid…). */
@@ -47,14 +50,15 @@ export function DvFlylineMap({
   geoJson,
   geoHighlight,
   coord = "normalized",
+  onGeoPick,
   className,
   style,
   children,
 }: DvFlylineMapProps) {
   const { canvasRef: geoRef } = useCanvasEffect(
-    (el) => createGeoMap(el, { geoJson: geoJson!, highlight: geoHighlight }),
+    (el) => createGeoMap(el, { geoJson: geoJson!, highlight: geoHighlight, onPick: onGeoPick }),
     // eslint-disable-next-line react-hooks/exhaustive-deps -- serialized deps trigger rebuild
-    [JSON.stringify(geoJson), JSON.stringify(geoHighlight)],
+    [JSON.stringify(geoJson), JSON.stringify(geoHighlight), onGeoPick],
   );
   const { canvasRef } = useCanvasEffect(
     (el) =>
@@ -76,7 +80,7 @@ export function DvFlylineMap({
     <div className={["dv-flyline-map", className].filter(Boolean).join(" ")} style={style}>
       {children && <div className="dv-flyline-map-bg">{children}</div>}
       {geoJson && <canvas ref={geoRef} />}
-      <canvas ref={canvasRef} />
+      <canvas ref={canvasRef} style={geoJson ? { pointerEvents: "none" } : undefined} />
     </div>
   );
 }

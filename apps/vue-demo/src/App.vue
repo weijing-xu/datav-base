@@ -31,13 +31,14 @@ import {
   DvTypewriter,
   DvWaterLevelPond,
 } from "@dv/vue";
-import type { GeoJSONCollection } from "@dv/core";
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { geoBounds, type GeoJSONCollection, type GeoJSONFeature } from "@dv/core";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
 const pv = ref(1280435);
 const uv = ref(86321);
 const water = ref(62);
 const china = ref<GeoJSONCollection>();
+const drill = ref<{ name: string; data: GeoJSONCollection }>();
 let timer: number | undefined;
 
 onMounted(() => {
@@ -45,6 +46,29 @@ onMounted(() => {
     .then((r) => r.json())
     .then((j: GeoJSONCollection) => (china.value = j))
     .catch(() => {});
+});
+
+/** Province click → fetch province GeoJSON from the DataV boundary CDN and drill in. */
+const drillIn = (f: GeoJSONFeature) => {
+  const adcode = f.properties?.adcode;
+  if (typeof adcode !== "number") return;
+  fetch(`https://geo.datav.aliyun.com/areas_v3/bound/${adcode}_full.json`)
+    .then((r) => r.json())
+    .then((j: GeoJSONCollection) => (drill.value = { name: f.properties?.name ?? "", data: j }))
+    .catch(() => {});
+};
+
+const activeGeo = computed(() => drill.value?.data ?? china.value);
+const mapData = computed(() => {
+  const geo = activeGeo.value;
+  if (!geo) return { points: NORM_POINTS, lines: FLY_LINES };
+  const b = geoBounds(geo);
+  const points = CITY_POINTS.filter((p) => p.x >= b.minX && p.x <= b.maxX && p.y >= b.minY && p.y <= b.maxY);
+  const lines = FLY_LINES.map((l) => ({
+    from: points.indexOf(CITY_POINTS[l.from]!),
+    to: points.indexOf(CITY_POINTS[l.to]!),
+  })).filter((l) => l.from >= 0 && l.to >= 0);
+  return { points, lines };
 });
 
 onMounted(() => {
@@ -56,6 +80,16 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => window.clearInterval(timer));
+
+// Normalized fallback used while china.json is still loading.
+const NORM_POINTS = [
+  { x: 0.78, y: 0.3, name: "北京" },
+  { x: 0.72, y: 0.55, name: "武汉" },
+  { x: 0.82, y: 0.65, name: "上海" },
+  { x: 0.45, y: 0.45, name: "兰州" },
+  { x: 0.6, y: 0.75, name: "广州" },
+  { x: 0.35, y: 0.62, name: "成都" },
+];
 
 // Real lng/lat over the China GeoJSON base map.
 const CITY_POINTS = [
@@ -224,15 +258,23 @@ const barOption = {
 
         <div style="display: flex; flex-direction: column; gap: 24px">
           <DvBorderBox variant="box3" style="height: 420px">
-            <h3 class="panel-title">数据迁徙</h3>
+            <h3 class="panel-title">数据迁徙{{ drill ? ` · ${drill.name}` : " · 点击省份下钻" }}</h3>
+            <button
+              v-if="drill"
+              class="drill-back"
+              @click="drill = undefined"
+            >
+              ← 返回全国
+            </button>
             <DvFlylineMap
-              :points="CITY_POINTS"
-              :lines="FLY_LINES"
+              :points="mapData.points"
+              :lines="mapData.lines"
               labels
               :speed="0.3"
-              :geo-json="china ?? REGIONS"
+              :geo-json="activeGeo ?? REGIONS"
               :geo-highlight="china ? ['广东省', '上海市', '北京市'] : ['华东', '华南']"
-              :coord="china ? 'geo' : 'normalized'"
+              :coord="activeGeo ? 'geo' : 'normalized'"
+              @geo-pick="drillIn"
             />
           </DvBorderBox>
           <div style="display: flex; gap: 24px; height: 200px">
@@ -319,5 +361,17 @@ const barOption = {
   color: #5b87a8;
   margin: 8px 0 4px;
   padding: 0 12px;
+}
+.drill-back {
+  position: absolute;
+  top: 44px;
+  right: 14px;
+  z-index: 3;
+  background: rgba(0, 246, 255, 0.12);
+  border: 1px solid rgba(0, 246, 255, 0.5);
+  color: #00f6ff;
+  font-size: 12px;
+  padding: 3px 10px;
+  cursor: pointer;
 }
 </style>

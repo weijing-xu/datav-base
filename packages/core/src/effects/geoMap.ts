@@ -24,6 +24,8 @@ export interface GeoMapOptions {
   highlightColor?: string;
   labelColor?: string;
   showLabels?: boolean;
+  /** Click hit-test: receives the clicked feature (e.g. for drill-down). */
+  onPick?: (feature: GeoJSONFeature) => void;
 }
 
 type Ring = [number, number][];
@@ -88,6 +90,7 @@ export function createGeoMap(canvas: HTMLCanvasElement, options: GeoMapOptions):
     highlightColor = "rgba(0,246,255,0.28)",
     labelColor = "#8fb3cf",
     showLabels = true,
+    onPick,
   } = options;
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("[dv] createGeoMap: 2d context unavailable");
@@ -99,6 +102,24 @@ export function createGeoMap(canvas: HTMLCanvasElement, options: GeoMapOptions):
   const projector = createGeoProjector(geoJson);
   const project = (x: number, y: number): [number, number] => projector(x, y, w, h);
 
+  // Path2D cache for click hit-testing, rebuilt on resize
+  let pickPaths: { feature: GeoJSONFeature; path: Path2D }[] = [];
+  const rebuildPaths = () => {
+    if (!onPick) return;
+    pickPaths = geoJson.features.map((f) => {
+      const path = new Path2D();
+      for (const ring of ringsOf(f)) {
+        ring.forEach(([x, y], i) => {
+          const [px, py] = project(x, y);
+          if (i === 0) path.moveTo(px, py);
+          else path.lineTo(px, py);
+        });
+        path.closePath();
+      }
+      return { feature: f, path };
+    });
+  };
+
   const resize = () => {
     const rect = canvas.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
@@ -107,6 +128,7 @@ export function createGeoMap(canvas: HTMLCanvasElement, options: GeoMapOptions):
     canvas.width = Math.max(1, Math.round(w * dpr));
     canvas.height = Math.max(1, Math.round(h * dpr));
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    rebuildPaths();
   };
 
   const draw = (t: number) => {
@@ -161,6 +183,19 @@ export function createGeoMap(canvas: HTMLCanvasElement, options: GeoMapOptions):
     resize();
     draw(0);
   });
+  const onClick = (e: MouseEvent) => {
+    if (!onPick) return;
+    for (const { feature, path } of pickPaths) {
+      if (ctx.isPointInPath(path, e.offsetX, e.offsetY)) {
+        onPick(feature);
+        return;
+      }
+    }
+  };
+  if (onPick) {
+    canvas.addEventListener("click", onClick);
+    canvas.style.cursor = "pointer";
+  }
   resize();
   running = highlight.length > 0;
   if (running) rafId = requestAnimationFrame(frame);
@@ -181,6 +216,7 @@ export function createGeoMap(canvas: HTMLCanvasElement, options: GeoMapOptions):
       running = false;
       cancelAnimationFrame(rafId);
       offResize();
+      canvas.removeEventListener("click", onClick);
       ctx.clearRect(0, 0, w, h);
     },
   };

@@ -6,6 +6,7 @@ import {
   type FlyLine,
   type FlyPoint,
   type GeoJSONCollection,
+  type GeoJSONFeature,
 } from "@dv/core";
 import { watch } from "vue";
 import { useCanvasEffect } from "../composables/useCanvasEffect";
@@ -37,6 +38,7 @@ const props = withDefaults(defineProps<Props>(), {
   labels: false,
   coord: "normalized",
 });
+const emit = defineEmits<{ geoPick: [feature: GeoJSONFeature] }>();
 
 const projector = () =>
   props.coord === "geo" && props.geoJson ? createGeoProjector(props.geoJson) : undefined;
@@ -54,7 +56,11 @@ const flyOptions = () => ({
 
 const { canvas, handle } = useCanvasEffect((el) => createFlylines(el, flyOptions()));
 const { canvas: geoCanvas, handle: geoHandle } = useCanvasEffect((el) =>
-  createGeoMap(el, { geoJson: props.geoJson!, highlight: props.geoHighlight }),
+  createGeoMap(el, {
+    geoJson: props.geoJson!,
+    highlight: props.geoHighlight,
+    onPick: (f) => emit("geoPick", f),
+  }),
 );
 
 // Rebuild when data changes
@@ -79,6 +85,7 @@ watch(
       geoHandle.value = createGeoMap(geoCanvas.value, {
         geoJson: props.geoJson,
         highlight: props.geoHighlight,
+        onPick: (f) => emit("geoPick", f),
       });
     }
   },
@@ -92,6 +99,6 @@ watch(
       <slot />
     </div>
     <canvas v-if="geoJson" ref="geoCanvas" />
-    <canvas ref="canvas" />
+    <canvas ref="canvas" :style="geoJson ? { pointerEvents: 'none' } : undefined" />
   </div>
 </template>
