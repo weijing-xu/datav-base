@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>datav-base · 数据大屏基座</title>
+    <style>
+      * { margin: 0; box-sizing: border-box; }
+      body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 48px;
+        background: radial-gradient(ellipse at center, #0a1e3c 0%, #020b18 70%);
+        color: #d5f1ff;
+        font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      }
+      h1 { font-size: 42px; letter-spacing: 14px; font-weight: 600; }
+      h1 em { color: #00f6ff; font-style: normal; }
+      p { color: #5b87a8; letter-spacing: 4px; }
+      nav { display: flex; gap: 32px; }
+      a {
+        display: block;
+        padding: 20px 56px;
+        border: 1px solid rgba(0, 246, 255, 0.5);
+        color: #00f6ff;
+        text-decoration: none;
+        font-size: 18px;
+        letter-spacing: 6px;
+        background: rgba(0, 246, 255, 0.06);
+        clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+        transition: background 0.2s;
+      }
+      a:hover { background: rgba(0, 246, 255, 0.18); }
+      a span { display: block; font-size: 12px; color: #5b87a8; margin-top: 6px; letter-spacing: 2px; }
+    </style>
+  </head>
+  <body>
+    <h1>数据大屏<em>基座</em></h1>
+    <p>React19 + Vue3 双端组件库 · 共享同一纯 TS 特效引擎</p>
+    <nav>
+      <a href="./react/">React Demo<span>@dv/react playground</span></a>
+      <a href="./vue/">Vue Demo<span>@dv/vue playground</span></a>
+    </nav>
+  </body>
+</html>

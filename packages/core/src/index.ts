@@ -22,6 +22,18 @@ export { createScanline } from "./effects/scanline";
 export type { ScanlineOptions } from "./effects/scanline";
 export { createLoadingRing } from "./effects/loadingRing";
 export type { LoadingRingOptions } from "./effects/loadingRing";
+export { createOrbitDots } from "./effects/orbitDots";
+export type { OrbitDotsOptions } from "./effects/orbitDots";
+export { createPulseRings } from "./effects/pulseRings";
+export type { PulseRingsOptions } from "./effects/pulseRings";
+export { createStripeFlow } from "./effects/stripeFlow";
+export type { StripeFlowOptions } from "./effects/stripeFlow";
+export { createTypewriter } from "./effects/typewriter";
+export type { TypewriterHandle, TypewriterOptions } from "./effects/typewriter";
+export { createMarquee } from "./effects/marquee";
+export type { MarqueeOptions } from "./effects/marquee";
+export { createRingProgress } from "./effects/ringProgress";
+export type { RingProgressHandle, RingProgressOptions } from "./effects/ringProgress";
 
 export { createChartHost } from "./charts/chartHost";
 export type { ChartHost, ChartHostOptions, EChartInstanceLike, EChartsLike } from "./charts/chartHost";

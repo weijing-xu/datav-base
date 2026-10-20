@@ -2,15 +2,24 @@
 import {
   DvAlert,
   DvBorderBox,
+  DvCapsuleChart,
   DvChart,
   DvDecoration1,
   DvDecoration2,
+  DvDecoration3,
+  DvDecoration5,
+  DvDecoration6,
+  DvDecoration7,
   DvDigitalFlop,
+  DvFlipClock,
   DvFlylineMap,
   DvFullScreenContainer,
   DvLoading,
+  DvMarqueeText,
+  DvPercentRing,
   DvScrollBoard,
   DvScrollRanking,
+  DvTypewriter,
   DvWaterLevelPond,
 } from "@dv/vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
@@ -61,6 +70,21 @@ const rankingRows = Array.from({ length: 8 }, (_, i) => ({
   value: Math.round(500 + Math.random() * 9500),
 }));
 
+const capsuleRows = Array.from({ length: 5 }, (_, i) => ({
+  name: `通道-${String(i + 1).padStart(2, "0")}`,
+  value: Math.round(20 + Math.random() * 80),
+}));
+
+const deadline = Date.now() + 8 * 3600 * 1000 + 42 * 60 * 1000;
+
+const feed = [
+  "华东区节点-03 负载恢复正常",
+  "广州链路延迟降至 12ms",
+  "新增接入 3 个边缘节点",
+  "数据同步任务完成 98%",
+  "兰州 → 上海 飞线流量上升 34%",
+];
+
 const barOption = {
   grid: { left: 60, right: 20, top: 30, bottom: 30 },
   xAxis: { type: "category", data: ["一", "二", "三", "四", "五", "六", "日"] },
@@ -106,6 +130,12 @@ const barOption = {
           <div style="height: 12px; width: 480px; margin: 6px auto 0">
             <DvDecoration2 :period="4" />
           </div>
+          <DvTypewriter
+            text="React19 + Vue3 双端同引擎 · effects in @dv/core"
+            :speed="18"
+            loop
+            style="font-size: 14px; color: #5b87a8"
+          />
         </div>
       </header>
 
@@ -129,8 +159,12 @@ const barOption = {
               <DvDigitalFlop :value="uv" style="font-size: 40px; color: #48ffe0" />
             </div>
           </div>
+          <div class="card" style="padding: 12px 20px">
+            <span class="label">系统时间 · 倒计时</span>
+            <DvFlipClock :to="deadline" />
+          </div>
           <DvAlert level="warn">3 个节点负载超过阈值，请关注华东区扩容</DvAlert>
-          <DvBorderBox variant="box1" style="height: 340px">
+          <DvBorderBox variant="box4" style="height: 320px">
             <h3 class="panel-title">节点监控</h3>
             <DvScrollBoard
               :header="['节点', '负载', '状态', '更新时间']"
@@ -157,11 +191,12 @@ const barOption = {
                   height: calc(100% - 50px);
                 "
               >
-                <DvWaterLevelPond :value="water" :size="120" />
-                <DvLoading text="同步中" :size="80" />
+                <DvWaterLevelPond :value="water" :size="110" />
+                <DvPercentRing :value="water" :size="110" />
+                <DvLoading text="同步中" :size="70" />
               </div>
             </DvBorderBox>
-            <DvBorderBox variant="box1" style="flex: 1">
+            <DvBorderBox variant="box6" style="flex: 1">
               <h3 class="panel-title">区域排名</h3>
               <DvScrollRanking :rows="rankingRows" :row-height="30" :speed="18" unit=" 单" />
             </DvBorderBox>
@@ -169,17 +204,34 @@ const barOption = {
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 24px">
-          <DvBorderBox variant="box1" style="height: 400px">
+          <DvBorderBox variant="box5" style="height: 340px">
             <h3 class="panel-title">周吞吐趋势</h3>
             <DvChart :option="barOption" />
           </DvBorderBox>
-          <div style="position: relative; height: 200px">
-            <div style="position: absolute; inset: 0">
+          <DvBorderBox variant="box1" style="height: 190px">
+            <h3 class="panel-title">通道负载</h3>
+            <DvCapsuleChart :rows="capsuleRows" unit="%" />
+          </DvBorderBox>
+          <div style="display: flex; gap: 16px; height: 150px">
+            <div style="position: relative; flex: 1">
               <DvDecoration3 :period="5" />
+            </div>
+            <div style="position: relative; flex: 1">
+              <DvDecoration5 />
+            </div>
+            <div style="position: relative; flex: 1">
+              <DvDecoration6 />
+            </div>
+            <div style="position: relative; flex: 1">
+              <DvDecoration7 />
             </div>
           </div>
         </div>
       </main>
+
+      <footer style="margin-top: 24px; padding: 0 40px">
+        <DvMarqueeText :items="feed" :speed="70" />
+      </footer>
     </div>
   </DvFullScreenContainer>
 </template>

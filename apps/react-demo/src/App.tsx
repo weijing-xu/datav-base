@@ -1,16 +1,24 @@
 import {
   DvAlert,
   DvBorderBox,
+  DvCapsuleChart,
   DvChart,
   DvDecoration1,
   DvDecoration2,
   DvDecoration3,
+  DvDecoration5,
+  DvDecoration6,
+  DvDecoration7,
   DvDigitalFlop,
+  DvFlipClock,
   DvFlylineMap,
   DvFullScreenContainer,
   DvLoading,
+  DvMarqueeText,
+  DvPercentRing,
   DvScrollBoard,
   DvScrollRanking,
+  DvTypewriter,
   DvWaterLevelPond,
 } from "@dv/react";
 import { useEffect, useMemo, useState } from "react";
@@ -84,6 +92,28 @@ export function App() {
     [],
   );
 
+  const capsuleRows = useMemo(
+    () =>
+      Array.from({ length: 5 }, (_, i) => ({
+        name: `通道-${String(i + 1).padStart(2, "0")}`,
+        value: Math.round(20 + Math.random() * 80),
+      })),
+    [],
+  );
+
+  const deadline = useMemo(() => Date.now() + 8 * 3600 * 1000 + 42 * 60 * 1000, []);
+
+  const feed = useMemo(
+    () => [
+      "华东区节点-03 负载恢复正常",
+      "广州链路延迟降至 12ms",
+      "新增接入 3 个边缘节点",
+      "数据同步任务完成 98%",
+      "兰州 → 上海 飞线流量上升 34%",
+    ],
+    [],
+  );
+
   const barOption = useMemo(
     () => ({
       grid: { left: 60, right: 20, top: 30, bottom: 30 },
@@ -137,6 +167,12 @@ export function App() {
             <div style={{ height: 12, width: 480, margin: "6px auto 0" }}>
               <DvDecoration2 period={4} />
             </div>
+            <DvTypewriter
+              text="React19 + Vue3 双端同引擎 · effects in @dv/core"
+              speed={18}
+              loop
+              style={{ fontSize: 14, color: "#5b87a8" }}
+            />
           </div>
         </header>
 
@@ -160,8 +196,12 @@ export function App() {
                 <DvDigitalFlop value={uv} style={{ fontSize: 40, color: "#48ffe0" }} />
               </div>
             </div>
+            <div style={{ ...card, padding: "12px 20px" }}>
+              <span style={{ color: "#5b87a8", fontSize: 16 }}>系统时间 · 倒计时</span>
+              <DvFlipClock to={deadline} />
+            </div>
             <DvAlert level="warn">3 个节点负载超过阈值，请关注华东区扩容</DvAlert>
-            <DvBorderBox variant="box1" style={{ height: 340 }}>
+            <DvBorderBox variant="box4" style={{ height: 320 }}>
               <h3 style={panelTitle}>节点监控</h3>
               <DvScrollBoard
                 header={["节点", "负载", "状态", "更新时间"]}
@@ -181,11 +221,12 @@ export function App() {
               <DvBorderBox variant="box2" style={{ flex: 1 }}>
                 <h3 style={panelTitle}>实时水位</h3>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around", height: "calc(100% - 50px)" }}>
-                  <DvWaterLevelPond value={water} size={120} />
-                  <DvLoading text="同步中" size={80} />
+                  <DvWaterLevelPond value={water} size={110} />
+                  <DvPercentRing value={water} size={110} />
+                  <DvLoading text="同步中" size={70} />
                 </div>
               </DvBorderBox>
-              <DvBorderBox variant="box1" style={{ flex: 1 }}>
+              <DvBorderBox variant="box6" style={{ flex: 1 }}>
                 <h3 style={panelTitle}>区域排名</h3>
                 <DvScrollRanking rows={rankingRows} rowHeight={30} speed={18} unit=" 单" />
               </DvBorderBox>
@@ -193,17 +234,34 @@ export function App() {
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-            <DvBorderBox variant="box1" style={{ height: 400 }}>
+            <DvBorderBox variant="box5" style={{ height: 340 }}>
               <h3 style={panelTitle}>周吞吐趋势</h3>
               <DvChart option={barOption} />
             </DvBorderBox>
-            <div style={{ position: "relative", height: 200 }}>
-              <div style={{ position: "absolute", inset: 0 }}>
+            <DvBorderBox variant="box1" style={{ height: 190 }}>
+              <h3 style={panelTitle}>通道负载</h3>
+              <DvCapsuleChart rows={capsuleRows} unit="%" />
+            </DvBorderBox>
+            <div style={{ display: "flex", gap: 16, height: 150 }}>
+              <div style={{ position: "relative", flex: 1 }}>
                 <DvDecoration3 period={5} />
+              </div>
+              <div style={{ position: "relative", flex: 1 }}>
+                <DvDecoration5 />
+              </div>
+              <div style={{ position: "relative", flex: 1 }}>
+                <DvDecoration6 />
+              </div>
+              <div style={{ position: "relative", flex: 1 }}>
+                <DvDecoration7 />
               </div>
             </div>
           </div>
         </main>
+
+        <footer style={{ marginTop: 24, padding: "0 40px" }}>
+          <DvMarqueeText items={feed} speed={70} />
+        </footer>
       </div>
     </DvFullScreenContainer>
   );
