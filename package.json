@@ -1,0 +1,21 @@
+{
+  "name": "datav-base",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.14.0",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "dev:react": "pnpm --filter react-demo dev",
+    "dev:vue": "pnpm --filter vue-demo dev",
+    "build:react": "pnpm --filter react-demo build",
+    "build:vue": "pnpm --filter vue-demo build"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.0",
+    "typescript": "^7.0.0"
+  }
+}

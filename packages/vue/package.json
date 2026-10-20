@@ -1,0 +1,35 @@
+{
+  "name": "@dv/vue",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Vue 3 kit for data screens — thin wrappers over @dv/core.",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "scripts": {
+    "build": "vite build && vue-tsc -p tsconfig.build.json",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  },
+  "dependencies": {
+    "@dv/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.0",
+    "typescript": "~5.9.3",
+    "vite": "^8.0.0",
+    "vue": "^3.5.0",
+    "vue-tsc": "^3.0.0"
+  }
+}
