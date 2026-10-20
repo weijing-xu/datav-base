@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { createFlylines, type FlyLine, type FlyPoint } from "@dv/core";
+import { createFlylines, createGeoMap, type FlyLine, type FlyPoint, type GeoJSONCollection } from "@dv/core";
 import { watch } from "vue";
 import { useCanvasEffect } from "../composables/useCanvasEffect";
 
@@ -13,6 +13,10 @@ interface Props {
   speed?: number;
   ripple?: boolean;
   labels?: boolean;
+  /** GeoJSON rendered on a second canvas under the flylines. */
+  geoJson?: GeoJSONCollection;
+  /** GeoJSON feature names drawn with a soft pulse. */
+  geoHighlight?: string[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -30,6 +34,10 @@ const { canvas, handle } = useCanvasEffect((el) =>
     ripple: props.ripple,
     labels: props.labels,
   }),
+);
+
+const { canvas: geoCanvas, handle: geoHandle } = useCanvasEffect((el) =>
+  createGeoMap(el, { geoJson: props.geoJson!, highlight: props.geoHighlight }),
 );
 
 // Rebuild when data changes
@@ -51,6 +59,20 @@ watch(
   },
   { deep: true },
 );
+
+watch(
+  () => [props.geoJson, props.geoHighlight],
+  () => {
+    geoHandle.value?.destroy();
+    if (geoCanvas.value && props.geoJson) {
+      geoHandle.value = createGeoMap(geoCanvas.value, {
+        geoJson: props.geoJson,
+        highlight: props.geoHighlight,
+      });
+    }
+  },
+  { deep: true },
+);
 </script>
 
 <template>
@@ -58,6 +80,7 @@ watch(
     <div v-if="$slots.default" class="dv-flyline-map-bg">
       <slot />
     </div>
+    <canvas v-if="geoJson" ref="geoCanvas" />
     <canvas ref="canvas" />
   </div>
 </template>

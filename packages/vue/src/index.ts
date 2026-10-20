@@ -10,10 +10,17 @@ import DvDecoration5 from "./components/DvDecoration5.vue";
 import DvDecoration6 from "./components/DvDecoration6.vue";
 import DvDecoration7 from "./components/DvDecoration7.vue";
 import DvCapsuleChart from "./components/DvCapsuleChart.vue";
+import DvConicalChart from "./components/DvConicalChart.vue";
 import DvDigitalFlop from "./components/DvDigitalFlop.vue";
+import DvGauge from "./components/DvGauge.vue";
+import DvGeoMap from "./components/DvGeoMap.vue";
+import DvGlitchText from "./components/DvGlitchText.vue";
 import DvFlipClock from "./components/DvFlipClock.vue";
 import DvMarqueeText from "./components/DvMarqueeText.vue";
 import DvPercentRing from "./components/DvPercentRing.vue";
+import DvPlexus from "./components/DvPlexus.vue";
+import DvTiltCard from "./components/DvTiltCard.vue";
+import DvTrendValue from "./components/DvTrendValue.vue";
 import DvTypewriter from "./components/DvTypewriter.vue";
 import DvFlylineMap from "./components/DvFlylineMap.vue";
 import DvFullScreenContainer from "./components/DvFullScreenContainer.vue";
@@ -36,15 +43,22 @@ export {
   DvDecoration6,
   DvDecoration7,
   DvCapsuleChart,
+  DvConicalChart,
   DvDigitalFlop,
   DvFlipClock,
   DvFlylineMap,
   DvFullScreenContainer,
+  DvGauge,
+  DvGeoMap,
+  DvGlitchText,
   DvLoading,
   DvMarqueeText,
   DvPercentRing,
+  DvPlexus,
   DvScrollBoard,
   DvScrollRanking,
+  DvTiltCard,
+  DvTrendValue,
   DvTypewriter,
   DvWaterLevelPond,
 };
@@ -61,15 +75,22 @@ const components = {
   DvDecoration6,
   DvDecoration7,
   DvCapsuleChart,
+  DvConicalChart,
   DvDigitalFlop,
   DvFlipClock,
   DvFlylineMap,
   DvFullScreenContainer,
+  DvGauge,
+  DvGeoMap,
+  DvGlitchText,
   DvLoading,
   DvMarqueeText,
   DvPercentRing,
+  DvPlexus,
   DvScrollBoard,
   DvScrollRanking,
+  DvTiltCard,
+  DvTrendValue,
   DvTypewriter,
   DvWaterLevelPond,
 };

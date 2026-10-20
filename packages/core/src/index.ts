@@ -34,6 +34,16 @@ export { createMarquee } from "./effects/marquee";
 export type { MarqueeOptions } from "./effects/marquee";
 export { createRingProgress } from "./effects/ringProgress";
 export type { RingProgressHandle, RingProgressOptions } from "./effects/ringProgress";
+export { createGauge } from "./effects/gauge";
+export type { GaugeHandle, GaugeOptions } from "./effects/gauge";
+export { createPlexus } from "./effects/plexus";
+export type { PlexusOptions } from "./effects/plexus";
+export { createConicalChart } from "./effects/conicalChart";
+export type { ConicalChartHandle, ConicalChartOptions, ConicalItem } from "./effects/conicalChart";
+export { createGeoMap } from "./effects/geoMap";
+export type { GeoJSONCollection, GeoJSONFeature, GeoMapOptions } from "./effects/geoMap";
+export { createTilt } from "./interactions/tilt";
+export type { TiltOptions } from "./interactions/tilt";
 
 export { createChartHost } from "./charts/chartHost";
 export type { ChartHost, ChartHostOptions, EChartInstanceLike, EChartsLike } from "./charts/chartHost";

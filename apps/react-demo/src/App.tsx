@@ -3,6 +3,7 @@ import {
   DvBorderBox,
   DvCapsuleChart,
   DvChart,
+  DvConicalChart,
   DvDecoration1,
   DvDecoration2,
   DvDecoration3,
@@ -13,11 +14,16 @@ import {
   DvFlipClock,
   DvFlylineMap,
   DvFullScreenContainer,
+  DvGauge,
+  DvGlitchText,
   DvLoading,
   DvMarqueeText,
   DvPercentRing,
+  DvPlexus,
   DvScrollBoard,
   DvScrollRanking,
+  DvTiltCard,
+  DvTrendValue,
   DvTypewriter,
   DvWaterLevelPond,
 } from "@dv/react";
@@ -57,6 +63,19 @@ const FLY_LINES = [
   { from: 0, to: 2 },
   { from: 5, to: 4 },
 ];
+
+/** Demo GeoJSON — abstract regions in 0-100 coordinates. */
+const REGIONS: import("@dv/core").GeoJSONCollection = {
+  type: "FeatureCollection",
+  features: [
+    { type: "Feature", properties: { name: "西北" }, geometry: { type: "Polygon", coordinates: [[[20, 60], [48, 60], [48, 80], [20, 80]]] } },
+    { type: "Feature", properties: { name: "西南" }, geometry: { type: "Polygon", coordinates: [[[28, 32], [48, 32], [48, 60], [28, 60]]] } },
+    { type: "Feature", properties: { name: "华中" }, geometry: { type: "Polygon", coordinates: [[[48, 42], [70, 42], [70, 66], [48, 66]]] } },
+    { type: "Feature", properties: { name: "华东" }, geometry: { type: "Polygon", coordinates: [[[70, 28], [92, 28], [92, 55], [70, 55]]] } },
+    { type: "Feature", properties: { name: "华南" }, geometry: { type: "Polygon", coordinates: [[[55, 10], [84, 10], [84, 30], [55, 30]]] } },
+    { type: "Feature", properties: { name: "华北" }, geometry: { type: "Polygon", coordinates: [[[60, 62], [90, 62], [90, 88], [60, 88]]] } },
+  ],
+};
 
 export function App() {
   const [pv, setPv] = useState(1280435);
@@ -150,6 +169,9 @@ export function App() {
   return (
     <DvFullScreenContainer>
       <div style={{ position: "relative", width: "100%", height: "100%", color: "#d5f1ff" }}>
+        <div style={{ position: "absolute", inset: 0, opacity: 0.35, pointerEvents: "none" }}>
+          <DvPlexus points={70} speed={14} />
+        </div>
         <header
           style={{
             height: 100,
@@ -187,20 +209,28 @@ export function App() {
         >
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             <div style={{ display: "flex", gap: 24 }}>
-              <div style={{ ...card, flex: 1, padding: "16px 20px" }}>
-                <span style={{ color: "#5b87a8", fontSize: 16 }}>累计访问量</span>
-                <DvDigitalFlop value={pv} style={{ fontSize: 40 }} />
-              </div>
-              <div style={{ ...card, flex: 1, padding: "16px 20px" }}>
-                <span style={{ color: "#5b87a8", fontSize: 16 }}>在线人数</span>
-                <DvDigitalFlop value={uv} style={{ fontSize: 40, color: "#48ffe0" }} />
-              </div>
+              <DvTiltCard style={{ flex: 1 }}>
+                <div style={{ ...card, padding: "16px 20px", height: "100%" }}>
+                  <span style={{ color: "#5b87a8", fontSize: 16 }}>累计访问量</span>
+                  <DvDigitalFlop value={pv} style={{ fontSize: 40 }} />
+                  <DvTrendValue value={pv} delta={4.6} style={{ fontSize: 14 }} />
+                </div>
+              </DvTiltCard>
+              <DvTiltCard style={{ flex: 1 }}>
+                <div style={{ ...card, padding: "16px 20px", height: "100%" }}>
+                  <span style={{ color: "#5b87a8", fontSize: 16 }}>在线人数</span>
+                  <DvDigitalFlop value={uv} style={{ fontSize: 40, color: "#48ffe0" }} />
+                  <DvTrendValue value={uv} delta={-1.8} style={{ fontSize: 14 }} />
+                </div>
+              </DvTiltCard>
             </div>
             <div style={{ ...card, padding: "12px 20px" }}>
               <span style={{ color: "#5b87a8", fontSize: 16 }}>系统时间 · 倒计时</span>
               <DvFlipClock to={deadline} />
             </div>
-            <DvAlert level="warn">3 个节点负载超过阈值，请关注华东区扩容</DvAlert>
+            <DvAlert level="warn">
+              <DvGlitchText text="3 个节点负载超过阈值，请关注华东区扩容" />
+            </DvAlert>
             <DvBorderBox variant="box4" style={{ height: 320 }}>
               <h3 style={panelTitle}>节点监控</h3>
               <DvScrollBoard
@@ -210,20 +240,32 @@ export function App() {
                 speed={20}
               />
             </DvBorderBox>
+            <DvBorderBox variant="box2" style={{ height: 190 }}>
+              <h3 style={panelTitle}>锥形分布</h3>
+              <DvConicalChart rows={capsuleRows} unit="%" style={{ height: "calc(100% - 46px)" }} />
+            </DvBorderBox>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             <DvBorderBox variant="box3" style={{ height: 420 }}>
               <h3 style={panelTitle}>数据迁徙</h3>
-              <DvFlylineMap points={CITY_POINTS} lines={FLY_LINES} labels speed={0.3} />
+              <DvFlylineMap
+                points={CITY_POINTS}
+                lines={FLY_LINES}
+                labels
+                speed={0.3}
+                geoJson={REGIONS}
+                geoHighlight={["华东", "华南"]}
+              />
             </DvBorderBox>
             <div style={{ display: "flex", gap: 24, height: 200 }}>
               <DvBorderBox variant="box2" style={{ flex: 1 }}>
                 <h3 style={panelTitle}>实时水位</h3>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around", height: "calc(100% - 50px)" }}>
-                  <DvWaterLevelPond value={water} size={110} />
-                  <DvPercentRing value={water} size={110} />
-                  <DvLoading text="同步中" size={70} />
+                  <DvWaterLevelPond value={water} size={90} />
+                  <DvPercentRing value={water} size={90} />
+                  <DvGauge value={water} size={100} />
+                  <DvLoading text="同步中" size={60} />
                 </div>
               </DvBorderBox>
               <DvBorderBox variant="box6" style={{ flex: 1 }}>
@@ -266,3 +308,4 @@ export function App() {
     </DvFullScreenContainer>
   );
 }
+

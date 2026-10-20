@@ -422,3 +422,63 @@
   color: var(--dv-accent);
   font-size: 20px;
 }
+
+.dv-glitch {
+  position: relative;
+  display: inline-block;
+  color: var(--dv-text);
+}
+
+.dv-glitch::before,
+.dv-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.dv-glitch::before {
+  color: var(--dv-accent);
+  animation: dv-glitch-1 2s infinite linear alternate;
+  clip-path: inset(0 0 60% 0);
+}
+
+.dv-glitch::after {
+  color: var(--dv-danger);
+  animation: dv-glitch-2 1.7s infinite linear alternate;
+  clip-path: inset(60% 0 0 0);
+}
+
+@keyframes dv-glitch-1 {
+  0% { transform: translate(2px, -1px); }
+  10% { transform: translate(-1px, 1px); }
+  20% { transform: translate(1px, 0); clip-path: inset(0 0 45% 0); }
+  30% { transform: translate(-2px, 0); }
+  50% { transform: translate(1px, 1px); clip-path: inset(20% 0 30% 0); }
+  70% { transform: translate(0, -1px); }
+  100% { transform: translate(2px, 1px); clip-path: inset(0 0 70% 0); }
+}
+
+@keyframes dv-glitch-2 {
+  0% { transform: translate(-2px, 1px); }
+  25% { transform: translate(1px, 0); clip-path: inset(50% 0 0 0); }
+  50% { transform: translate(-1px, -1px); }
+  75% { transform: translate(2px, 0); clip-path: inset(30% 0 40% 0); }
+  100% { transform: translate(0, 1px); }
+}
+
+.dv-trend {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--dv-font-number);
+}
+
+.dv-trend-up { color: var(--dv-danger); }
+.dv-trend-down { color: #48ffe0; }
+.dv-trend-flat { color: var(--dv-text); }
+
+.dv-trend-arrow {
+  font-size: 0.75em;
+  animation: dv-blink 1.2s steps(2) infinite;
+}
