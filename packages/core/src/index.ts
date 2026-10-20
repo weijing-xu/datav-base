@@ -55,6 +55,15 @@ export type { TiltOptions } from "./interactions/tilt";
 
 export { createChartHost } from "./charts/chartHost";
 export type { ChartHost, ChartHostOptions, EChartInstanceLike, EChartsLike } from "./charts/chartHost";
+export { dvFunnelOption, dvRadarOption, dvSankeyOption } from "./charts/options";
+export type {
+  DvFunnelOptions,
+  DvRadarOptions,
+  DvSankeyOptions,
+  FunnelItem,
+  RadarSeriesItem,
+  SankeyLink,
+} from "./charts/options";
 
 export { borderBoxPolys } from "./components/borders";
 export type { BorderBoxColors, BorderBoxVariant, BorderPolygon } from "./components/borders";

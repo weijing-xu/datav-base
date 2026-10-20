@@ -31,7 +31,7 @@ import {
   DvTypewriter,
   DvWaterLevelPond,
 } from "@dv/react";
-import { geoBounds } from "@dv/core";
+import { dvFunnelOption, dvRadarOption, dvSankeyOption, geoBounds } from "@dv/core";
 import { useEffect, useMemo, useState } from "react";
 
 const card: React.CSSProperties = {
@@ -236,8 +236,51 @@ export function App() {
     [],
   );
 
+  const radarOption = useMemo(
+    () =>
+      dvRadarOption({
+        indicators: ["吞吐", "时延", "可用率", "覆盖", "安全"],
+        max: 100,
+        series: [
+          { name: "华东链路", values: [82, 68, 96, 74, 88] },
+          { name: "华南链路", values: [70, 81, 92, 65, 79], color: "#48ffe0" },
+        ],
+      }),
+    [],
+  );
+
+  const funnelOption = useMemo(
+    () =>
+      dvFunnelOption({
+        data: [
+          { name: "请求接入", value: 12000 },
+          { name: "鉴权通过", value: 9800 },
+          { name: "数据返回", value: 7600 },
+          { name: "成功落库", value: 5200 },
+          { name: "下游分发", value: 3100 },
+        ],
+      }),
+    [],
+  );
+
+  const sankeyOption = useMemo(
+    () =>
+      dvSankeyOption({
+        links: [
+          { source: "边缘节点", target: "华东中心", value: 42 },
+          { source: "边缘节点", target: "华南中心", value: 28 },
+          { source: "华东中心", target: "实时仓", value: 30 },
+          { source: "华东中心", target: "离线仓", value: 12 },
+          { source: "华南中心", target: "实时仓", value: 20 },
+          { source: "华南中心", target: "离线仓", value: 8 },
+          { source: "实时仓", target: "大屏服务", value: 50 },
+        ],
+      }),
+    [],
+  );
+
   return (
-    <DvFullScreenContainer>
+    <DvFullScreenContainer designHeight={1500}>
       <div style={{ position: "relative", width: "100%", height: "100%", color: "#d5f1ff" }}>
         <div style={{ position: "absolute", inset: 0, opacity: 0.35, pointerEvents: "none" }}>
           <DvPlexus points={70} speed={14} />
@@ -404,6 +447,21 @@ export function App() {
             </div>
           </div>
         </main>
+
+        <section style={{ display: "flex", gap: 24, margin: "24px 40px 0", height: 240 }}>
+          <DvBorderBox variant="box8" style={{ flex: 1 }}>
+            <h3 style={panelTitle}>链路质量</h3>
+            <DvChart option={radarOption} />
+          </DvBorderBox>
+          <DvBorderBox variant="box9" style={{ flex: 1 }}>
+            <h3 style={panelTitle}>接入漏斗</h3>
+            <DvChart option={funnelOption} />
+          </DvBorderBox>
+          <DvBorderBox variant="box12" style={{ flex: 1 }}>
+            <h3 style={panelTitle}>数据流向</h3>
+            <DvChart option={sankeyOption} />
+          </DvBorderBox>
+        </section>
 
         <section style={{ display: "flex", gap: 16, margin: "24px 40px 0", height: 110 }}>
           {(["box7", "box8", "box9", "box10", "box11", "box12", "box13"] as const).map((v) => (

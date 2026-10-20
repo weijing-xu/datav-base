@@ -32,7 +32,14 @@ import {
   DvTypewriter,
   DvWaterLevelPond,
 } from "@dv/vue";
-import { geoBounds, type GeoJSONCollection, type GeoJSONFeature } from "@dv/core";
+import {
+  dvFunnelOption,
+  dvRadarOption,
+  dvSankeyOption,
+  geoBounds,
+  type GeoJSONCollection,
+  type GeoJSONFeature,
+} from "@dv/core";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
 const pv = ref(1280435);
@@ -204,10 +211,41 @@ const barOption = {
     },
   ],
 };
+
+const radarOption = dvRadarOption({
+  indicators: ["吞吐", "时延", "可用率", "覆盖", "安全"],
+  max: 100,
+  series: [
+    { name: "华东链路", values: [82, 68, 96, 74, 88] },
+    { name: "华南链路", values: [70, 81, 92, 65, 79], color: "#48ffe0" },
+  ],
+});
+
+const funnelOption = dvFunnelOption({
+  data: [
+    { name: "请求接入", value: 12000 },
+    { name: "鉴权通过", value: 9800 },
+    { name: "数据返回", value: 7600 },
+    { name: "成功落库", value: 5200 },
+    { name: "下游分发", value: 3100 },
+  ],
+});
+
+const sankeyOption = dvSankeyOption({
+  links: [
+    { source: "边缘节点", target: "华东中心", value: 42 },
+    { source: "边缘节点", target: "华南中心", value: 28 },
+    { source: "华东中心", target: "实时仓", value: 30 },
+    { source: "华东中心", target: "离线仓", value: 12 },
+    { source: "华南中心", target: "实时仓", value: 20 },
+    { source: "华南中心", target: "离线仓", value: 8 },
+    { source: "实时仓", target: "大屏服务", value: 50 },
+  ],
+});
 </script>
 
 <template>
-  <DvFullScreenContainer>
+  <DvFullScreenContainer :design-height="1500">
     <div style="position: relative; width: 100%; height: 100%; color: #d5f1ff">
       <div style="position: absolute; inset: 0; opacity: 0.35; pointer-events: none">
         <DvPlexus :points="70" :speed="14" />
@@ -363,6 +401,21 @@ const barOption = {
           </div>
         </div>
       </main>
+
+      <section style="display: flex; gap: 24px; margin: 24px 40px 0; height: 240px">
+        <DvBorderBox variant="box8" style="flex: 1">
+          <h3 class="panel-title">链路质量</h3>
+          <DvChart :option="radarOption" />
+        </DvBorderBox>
+        <DvBorderBox variant="box9" style="flex: 1">
+          <h3 class="panel-title">接入漏斗</h3>
+          <DvChart :option="funnelOption" />
+        </DvBorderBox>
+        <DvBorderBox variant="box12" style="flex: 1">
+          <h3 class="panel-title">数据流向</h3>
+          <DvChart :option="sankeyOption" />
+        </DvBorderBox>
+      </section>
 
       <section style="display: flex; gap: 16px; margin: 24px 40px 0; height: 110px">
         <DvBorderBox v-for="v in borderVariants" :key="v" :variant="v" style="flex: 1">
