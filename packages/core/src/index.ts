@@ -40,8 +40,14 @@ export { createPlexus } from "./effects/plexus";
 export type { PlexusOptions } from "./effects/plexus";
 export { createConicalChart } from "./effects/conicalChart";
 export type { ConicalChartHandle, ConicalChartOptions, ConicalItem } from "./effects/conicalChart";
-export { createGeoMap } from "./effects/geoMap";
-export type { GeoJSONCollection, GeoJSONFeature, GeoMapOptions } from "./effects/geoMap";
+export { createGeoMap, createGeoProjector, geoBounds } from "./effects/geoMap";
+export type { GeoBounds, GeoJSONCollection, GeoJSONFeature, GeoMapOptions, GeoProjector } from "./effects/geoMap";
+export { createDialRing } from "./effects/dialRing";
+export type { DialRingOptions } from "./effects/dialRing";
+export { createFlowChevron } from "./effects/flowChevron";
+export type { FlowChevronOptions } from "./effects/flowChevron";
+export { createCornerScan } from "./effects/cornerScan";
+export type { CornerScanOptions } from "./effects/cornerScan";
 export { createTilt } from "./interactions/tilt";
 export type { TiltOptions } from "./interactions/tilt";
 

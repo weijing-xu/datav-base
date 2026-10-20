@@ -18,6 +18,13 @@ export interface FlyLine {
 
 export interface FlylinesOptions {
   points: FlyPoint[];
+  /**
+   * Optional projector: when set, point.x/y are raw geo coordinates (e.g.
+   * lng/lat) and are mapped via `project(x, y, w, h)` instead of the
+   * normalized [0,1] stretch. Pass `createGeoProjector(geoJson)` to align
+   * with a GeoJSON base map.
+   */
+  project?: (x: number, y: number, w: number, h: number) => [number, number];
   lines: FlyLine[];
   /** Line/head color. Default "#00f6ff". */
   color?: string;
@@ -51,6 +58,8 @@ const quad = (p0: number, c: number, p1: number, t: number) =>
  */
 export function createFlylines(canvas: HTMLCanvasElement, options: FlylinesOptions): EffectHandle {
   const { points, lines, color = "#00f6ff", speed = 0.25, ripple = true, labels = false } = options;
+  const project = options.project;
+  const px = (p: FlyPoint): [number, number] => (project ? project(p.x, p.y, w, h) : [p.x * w, p.y * h]);
   const accent = options.accent ?? color;
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("[dv] createFlylines: 2d context unavailable");
@@ -67,10 +76,8 @@ export function createFlylines(canvas: HTMLCanvasElement, options: FlylinesOptio
         const a = points[line.from];
         const b = points[line.to];
         if (!a || !b) return null;
-        const x0 = a.x * w;
-        const y0 = a.y * h;
-        const x1 = b.x * w;
-        const y1 = b.y * h;
+        const [x0, y0] = px(a);
+        const [x1, y1] = px(b);
         const mx = (x0 + x1) / 2;
         const my = (y0 + y1) / 2;
         // control point: perpendicular offset, arc height ~ 18% of chord length
@@ -103,8 +110,7 @@ export function createFlylines(canvas: HTMLCanvasElement, options: FlylinesOptio
   };
 
   const drawPoint = (p: FlyPoint, t: number, i: number) => {
-    const x = p.x * w;
-    const y = p.y * h;
+    const [x, y] = px(p);
     ctx.fillStyle = accent;
     ctx.beginPath();
     ctx.arc(x, y, 2.5, 0, Math.PI * 2);

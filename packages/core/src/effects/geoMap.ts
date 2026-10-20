@@ -35,6 +35,49 @@ function ringsOf(f: GeoJSONFeature): Ring[] {
   return (f.geometry.coordinates as number[][][][]).flat().map((r) => r as Ring);
 }
 
+export interface GeoBounds {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+}
+
+export function geoBounds(geoJson: GeoJSONCollection): GeoBounds {
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  for (const f of geoJson.features) {
+    for (const ring of ringsOf(f)) {
+      for (const [x, y] of ring) {
+        if (x < minX) minX = x;
+        if (y < minY) minY = y;
+        if (x > maxX) maxX = x;
+        if (y > maxY) maxY = y;
+      }
+    }
+  }
+  return { minX, minY, maxX, maxY };
+}
+
+export type GeoProjector = (x: number, y: number, w: number, h: number) => [number, number];
+
+/**
+ * Equirectangular projector fit to (w,h) with padding — shared by createGeoMap
+ * and createFlylines so overlays land on the same pixels.
+ */
+export function createGeoProjector(geoJson: GeoJSONCollection, pad = 12): GeoProjector {
+  const { minX, minY, maxX, maxY } = geoBounds(geoJson);
+  const spanX = Math.max(1e-6, maxX - minX);
+  const spanY = Math.max(1e-6, maxY - minY);
+  return (x, y, w, h) => {
+    const s = Math.min((w - pad * 2) / spanX, (h - pad * 2) / spanY);
+    const ox = pad + (w - pad * 2 - spanX * s) / 2;
+    const oy = pad + (h - pad * 2 - spanY * s) / 2;
+    return [ox + (x - minX) * s, oy + (maxY - y) * s];
+  };
+}
+
 /** Renders a GeoJSON FeatureCollection, equirectangular-projected to fit the canvas. */
 export function createGeoMap(canvas: HTMLCanvasElement, options: GeoMapOptions): EffectHandle {
   const {
@@ -53,32 +96,8 @@ export function createGeoMap(canvas: HTMLCanvasElement, options: GeoMapOptions):
   let running = false;
   let w = 0;
   let h = 0;
-
-  // precompute bounds
-  let minX = Infinity;
-  let minY = Infinity;
-  let maxX = -Infinity;
-  let maxY = -Infinity;
-  for (const f of geoJson.features) {
-    for (const ring of ringsOf(f)) {
-      for (const [x, y] of ring) {
-        if (x < minX) minX = x;
-        if (y < minY) minY = y;
-        if (x > maxX) maxX = x;
-        if (y > maxY) maxY = y;
-      }
-    }
-  }
-
-  const project = (x: number, y: number): [number, number] => {
-    const pad = 12;
-    const spanX = Math.max(1e-6, maxX - minX);
-    const spanY = Math.max(1e-6, maxY - minY);
-    const s = Math.min((w - pad * 2) / spanX, (h - pad * 2) / spanY);
-    const ox = pad + (w - pad * 2 - spanX * s) / 2;
-    const oy = pad + (h - pad * 2 - spanY * s) / 2;
-    return [ox + (x - minX) * s, oy + (maxY - y) * s];
-  };
+  const projector = createGeoProjector(geoJson);
+  const project = (x: number, y: number): [number, number] => projector(x, y, w, h);
 
   const resize = () => {
     const rect = canvas.getBoundingClientRect();

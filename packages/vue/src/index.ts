@@ -9,6 +9,9 @@ import DvDecoration4 from "./components/DvDecoration4.vue";
 import DvDecoration5 from "./components/DvDecoration5.vue";
 import DvDecoration6 from "./components/DvDecoration6.vue";
 import DvDecoration7 from "./components/DvDecoration7.vue";
+import DvDecoration8 from "./components/DvDecoration8.vue";
+import DvDecoration9 from "./components/DvDecoration9.vue";
+import DvDecoration10 from "./components/DvDecoration10.vue";
 import DvCapsuleChart from "./components/DvCapsuleChart.vue";
 import DvConicalChart from "./components/DvConicalChart.vue";
 import DvDigitalFlop from "./components/DvDigitalFlop.vue";
@@ -42,6 +45,9 @@ export {
   DvDecoration5,
   DvDecoration6,
   DvDecoration7,
+  DvDecoration8,
+  DvDecoration9,
+  DvDecoration10,
   DvCapsuleChart,
   DvConicalChart,
   DvDigitalFlop,
@@ -74,6 +80,9 @@ const components = {
   DvDecoration5,
   DvDecoration6,
   DvDecoration7,
+  DvDecoration8,
+  DvDecoration9,
+  DvDecoration10,
   DvCapsuleChart,
   DvConicalChart,
   DvDigitalFlop,

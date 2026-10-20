@@ -6,11 +6,14 @@ import {
   DvChart,
   DvConicalChart,
   DvDecoration1,
+  DvDecoration10,
   DvDecoration2,
   DvDecoration3,
   DvDecoration5,
   DvDecoration6,
   DvDecoration7,
+  DvDecoration8,
+  DvDecoration9,
   DvDigitalFlop,
   DvFlipClock,
   DvFlylineMap,
@@ -34,7 +37,15 @@ import { onBeforeUnmount, onMounted, ref } from "vue";
 const pv = ref(1280435);
 const uv = ref(86321);
 const water = ref(62);
+const china = ref<GeoJSONCollection>();
 let timer: number | undefined;
+
+onMounted(() => {
+  fetch(`${import.meta.env.BASE_URL}china.json`)
+    .then((r) => r.json())
+    .then((j: GeoJSONCollection) => (china.value = j))
+    .catch(() => {});
+});
 
 onMounted(() => {
   timer = window.setInterval(() => {
@@ -46,13 +57,14 @@ onMounted(() => {
 
 onBeforeUnmount(() => window.clearInterval(timer));
 
+// Real lng/lat over the China GeoJSON base map.
 const CITY_POINTS = [
-  { x: 0.78, y: 0.3, name: "北京" },
-  { x: 0.72, y: 0.55, name: "武汉" },
-  { x: 0.82, y: 0.65, name: "上海" },
-  { x: 0.45, y: 0.45, name: "兰州" },
-  { x: 0.6, y: 0.75, name: "广州" },
-  { x: 0.35, y: 0.62, name: "成都" },
+  { x: 116.41, y: 39.9, name: "北京" },
+  { x: 114.3, y: 30.6, name: "武汉" },
+  { x: 121.47, y: 31.23, name: "上海" },
+  { x: 103.82, y: 36.06, name: "兰州" },
+  { x: 113.26, y: 23.13, name: "广州" },
+  { x: 104.07, y: 30.57, name: "成都" },
 ];
 
 const FLY_LINES = [
@@ -218,8 +230,9 @@ const barOption = {
               :lines="FLY_LINES"
               labels
               :speed="0.3"
-              :geo-json="REGIONS"
-              :geo-highlight="['华东', '华南']"
+              :geo-json="china ?? REGIONS"
+              :geo-highlight="china ? ['广东省', '上海市', '北京市'] : ['华东', '华南']"
+              :coord="china ? 'geo' : 'normalized'"
             />
           </DvBorderBox>
           <div style="display: flex; gap: 24px; height: 200px">
@@ -267,6 +280,15 @@ const barOption = {
             </div>
             <div style="position: relative; flex: 1">
               <DvDecoration7 />
+            </div>
+            <div style="position: relative; flex: 1">
+              <DvDecoration8 />
+            </div>
+            <div style="position: relative; flex: 1">
+              <DvDecoration9 />
+            </div>
+            <div style="position: relative; flex: 1">
+              <DvDecoration10 />
             </div>
           </div>
         </div>

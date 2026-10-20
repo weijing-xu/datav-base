@@ -1,4 +1,11 @@
-import { createFlylines, createGeoMap, type FlyLine, type FlyPoint, type GeoJSONCollection } from "@dv/core";
+import {
+  createFlylines,
+  createGeoMap,
+  createGeoProjector,
+  type FlyLine,
+  type FlyPoint,
+  type GeoJSONCollection,
+} from "@dv/core";
 import type { CSSProperties, ReactNode } from "react";
 import { useCanvasEffect } from "../hooks/useCanvasEffect";
 
@@ -16,6 +23,12 @@ export interface DvFlylineMapProps {
   geoJson?: GeoJSONCollection;
   /** GeoJSON feature names drawn with a soft pulse. */
   geoHighlight?: string[];
+  /**
+   * Point coordinate space. "normalized" (default) = x/y in [0,1] stretched over
+   * the box; "geo" = raw GeoJSON coordinates (e.g. lng/lat), projected to align
+   * with the `geoJson` base map — requires geoJson.
+   */
+  coord?: "normalized" | "geo";
   className?: string;
   style?: CSSProperties;
   /** Background layer rendered under the lines (map image, grid…). */
@@ -33,6 +46,7 @@ export function DvFlylineMap({
   labels,
   geoJson,
   geoHighlight,
+  coord = "normalized",
   className,
   style,
   children,
@@ -43,9 +57,19 @@ export function DvFlylineMap({
     [JSON.stringify(geoJson), JSON.stringify(geoHighlight)],
   );
   const { canvasRef } = useCanvasEffect(
-    (el) => createFlylines(el, { points, lines, color, accent, speed, ripple, labels }),
+    (el) =>
+      createFlylines(el, {
+        points,
+        lines,
+        color,
+        accent,
+        speed,
+        ripple,
+        labels,
+        project: coord === "geo" && geoJson ? createGeoProjector(geoJson) : undefined,
+      }),
     // eslint-disable-next-line react-hooks/exhaustive-deps -- serialized deps trigger rebuild
-    [JSON.stringify(points), JSON.stringify(lines), color, accent, speed, ripple, labels],
+    [JSON.stringify(points), JSON.stringify(lines), JSON.stringify(geoJson), coord, color, accent, speed, ripple, labels],
   );
 
   return (
