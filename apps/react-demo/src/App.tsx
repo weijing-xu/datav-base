@@ -1,5 +1,5 @@
-import { DvDecoration1, DvDigitalFlop, DvFullScreenContainer } from "@dv/react";
-import { useEffect, useState } from "react";
+import { DvBorderBox, DvDecoration1, DvDigitalFlop, DvFullScreenContainer, DvScrollBoard } from "@dv/react";
+import { useEffect, useMemo, useState } from "react";
 
 const card: React.CSSProperties = {
   background: "rgba(9,32,63,0.6)",
@@ -21,6 +21,17 @@ export function App() {
     }, 2000);
     return () => clearInterval(id);
   }, []);
+
+  const rows = useMemo(
+    () =>
+      Array.from({ length: 10 }, (_, i) => [
+        `节点-${String(i + 1).padStart(2, "0")}`,
+        `${(Math.random() * 100).toFixed(1)}%`,
+        Math.random() > 0.3 ? "正常" : "告警",
+        new Date(Date.now() - i * 60000).toLocaleTimeString(),
+      ]),
+    [],
+  );
 
   return (
     <DvFullScreenContainer>
@@ -52,6 +63,17 @@ export function App() {
             <DvDigitalFlop value={uv} separator="," style={{ fontSize: 56, color: "#48ffe0" }} />
           </div>
         </main>
+
+        <section style={{ width: 720, height: 360, margin: "60px auto 0" }}>
+          <DvBorderBox variant="box1">
+            <DvScrollBoard
+              header={["节点", "负载", "状态", "更新时间"]}
+              rows={rows}
+              rowHeight={40}
+              speed={24}
+            />
+          </DvBorderBox>
+        </section>
       </div>
     </DvFullScreenContainer>
   );

@@ -4,3 +4,7 @@ export { DvDigitalFlop } from "./components/DvDigitalFlop";
 export type { DvDigitalFlopProps } from "./components/DvDigitalFlop";
 export { DvDecoration1 } from "./components/DvDecoration1";
 export type { DvDecoration1Props } from "./components/DvDecoration1";
+export { DvBorderBox } from "./components/DvBorderBox";
+export type { DvBorderBoxProps } from "./components/DvBorderBox";
+export { DvScrollBoard } from "./components/DvScrollBoard";
+export type { DvScrollBoardProps } from "./components/DvScrollBoard";

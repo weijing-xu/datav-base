@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { DvDecoration1, DvDigitalFlop, DvFullScreenContainer } from "@dv/vue";
+import { DvBorderBox, DvDecoration1, DvDigitalFlop, DvFullScreenContainer, DvScrollBoard } from "@dv/vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 
 const pv = ref(1280435);
@@ -14,6 +14,13 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => window.clearInterval(timer));
+
+const rows = Array.from({ length: 10 }, (_, i) => [
+  `节点-${String(i + 1).padStart(2, "0")}`,
+  `${(Math.random() * 100).toFixed(1)}%`,
+  Math.random() > 0.3 ? "正常" : "告警",
+  new Date(Date.now() - i * 60000).toLocaleTimeString(),
+]);
 </script>
 
 <template>
@@ -40,6 +47,17 @@ onBeforeUnmount(() => window.clearInterval(timer));
           <DvDigitalFlop :value="uv" style="font-size: 56px; color: #48ffe0" />
         </div>
       </main>
+
+      <section style="width: 720px; height: 360px; margin: 60px auto 0">
+        <DvBorderBox variant="box1">
+          <DvScrollBoard
+            :header="['节点', '负载', '状态', '更新时间']"
+            :rows="rows"
+            :row-height="40"
+            :speed="24"
+          />
+        </DvBorderBox>
+      </section>
     </div>
   </DvFullScreenContainer>
 </template>
